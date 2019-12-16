@@ -1,6 +1,6 @@
 {
-  "name":"Bit Clock",
+  "name":"Fit Clock",
   "type":"app",
-  "icon":"*bitclck",
-  "src":"-7bitclck"
+  "icon":"*fitclck",
+  "src":"-7fitclck"
 }
