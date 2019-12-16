@@ -176,9 +176,6 @@
         if (animInterval) return; // in animation - quit
         var t = "";
         var d = new Date();
-        if (lastTime === "     ") {
-            setGPSTime();
-        }
         var t = (" " + d.getHours()).substr(-2) + ":" +
             ("0" + d.getMinutes()).substr(-2);
         var l = lastTime;
@@ -223,6 +220,7 @@
         if (on) {
             showTime();
             drawWidgets();
+            
         }
     });
 
@@ -240,4 +238,5 @@
     // Update time once a second
     setInterval(showTime, 1000);
     showTime();
+    setGPSTime();
 })();
