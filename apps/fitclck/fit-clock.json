@@ -1,6 +1,6 @@
 {
   "name":"Fit Clock",
-  "type":"app",
+  "type":"clock",
   "icon":"*fitclck",
   "src":"-fitclck"
 }
