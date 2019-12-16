@@ -233,7 +233,7 @@
     });
 
     function setGPSTime(){
-        Bangle.setGPSPower(1)
+        Bangle.setGPSPower(1);
     }
 
     g.clear();
