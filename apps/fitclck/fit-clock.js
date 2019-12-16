@@ -1,6 +1,6 @@
 (function() { // make our own scope so this is GC'd when intervals are cleared
     // Offscreen buffer
-    var buf = Graphics.createArrayBuffer(240, 86, 1, {
+    var buf = Graphics.createArrayBuffer(240, 128, 1, {
         msb: true
     });
 
@@ -208,6 +208,7 @@
     };
     var nofix = 0;
     var fix = null;
+
     function formatTime(now) {
         var fd = now.toUTCString().split(" ");
         var time = fd[4].substr(0, 5);
@@ -220,7 +221,6 @@
         if (on) {
             showTime();
             drawWidgets();
-            
         }
     });
 
@@ -230,8 +230,23 @@
         Bangle.setGPSPower(0);
     });
 
+    Bangle.on('HRM',function(hrm) {
+      /*hrm is an object containing:
+        { "bpm": number,             // Beats per minute
+          "confidence": number,      // 0-100 percentage confidence in the heart rate
+          "raw": Uint8Array,         // raw samples from heart rate monitor
+       }*/
+       var hr = hrm.bpm + " " + hrm.confidence + " " + hrm.raw;
+       buf.drawString(hr, buf.getWidth() / 2, y + 20);
+       flip();
+    });
+
     function setGPSTime(){
         Bangle.setGPSPower(1);
+    }
+
+    function startHRMonitor(){
+        Bangle.setHRMPower(1);
     }
 
     g.clear();
