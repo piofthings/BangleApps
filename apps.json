@@ -633,7 +633,7 @@
   "storage": [
     {"name":"+bitclck","url":"bit-clock.json"},
     {"name":"-bitclck","url":"bit-clock.js"},
-    {"name":"*bitclck","url":"bot-clock-icon.js","evaluate":true}
+    {"name":"*bitclck","url":"bit-clock-icon.js","evaluate":true}
   ]
 }
 
