@@ -626,7 +626,7 @@
 },
 { "id": "bitclck",
   "name": "Bit Clock",
-  "icon": "app.png",
+  "icon": "bit-clock.png",
   "version":"0.01",
   "description": "Bit Clock tries to mimic functions of a fitness watch by providing clock, GPS, heart rate monitoring all bundled into a single app",
   "tags": "clock",
