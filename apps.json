@@ -624,16 +624,16 @@
       {"name":"*blobclk","url":"clock-blob-icon.js","evaluate":true}
     ]
 },
-{ "id": "bitclck",
-  "name": "Bit Clock",
-  "icon": "bit-clock.png",
+{ "id": "fitclck",
+  "name": "Fit Clock",
+  "icon": "fit-clock.png",
   "version":"0.01",
-  "description": "Bit Clock tries to mimic functions of a fitness watch by providing clock, GPS, heart rate monitoring all bundled into a single app",
+  "description": "Fit Clock tries to mimic functions of a fitness watch by providing clock, GPS, heart rate monitoring all bundled into a single app",
   "tags": "clock",
   "storage": [
-    {"name":"+bitclck","url":"bit-clock.json"},
-    {"name":"-bitclck","url":"bit-clock.js"},
-    {"name":"*bitclck","url":"bit-clock-icon.js","evaluate":true}
+    {"name":"+fitclck","url":"fit-clock.json"},
+    {"name":"-fitclck","url":"fit-clock.js"},
+    {"name":"*fitclck","url":"fit-clock-icon.js","evaluate":true}
   ]
 }
 
