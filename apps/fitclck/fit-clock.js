@@ -17,6 +17,8 @@
     // If animating, this is the interval's id
     var animInterval;
 
+    var lastHeartRate = "BPM: ";
+
     /* Get array of lines from digit d to d+1.
      n is the amount (0..1)
      maxFive is true is this digit only counts 0..5 */
@@ -167,6 +169,11 @@
         buf.setFontAlign(0, -1);
         var date = d.toString().substr(0, 15);
         buf.drawString(date, buf.getWidth() / 2, y + 8);
+        // BPM
+        buf.setFont("12x16");
+        buf.setFontAlign(0, -1);
+        buf.drawString(date, buf.getWidth() / 2, y + 8);
+
         flip();
     }
 
@@ -236,9 +243,7 @@
           "confidence": number,      // 0-100 percentage confidence in the heart rate
           "raw": Uint8Array,         // raw samples from heart rate monitor
        }*/
-       var hr = hrm.bpm + " " + hrm.confidence + " " + hrm.raw;
-       buf.drawString(hr, buf.getWidth() / 2, y + 20);
-       flip();
+       lastHeartRate = "BPM: " + hrm.bpm;// + " " + hrm.confidence + " " + hrm.raw;
     });
 
     function setGPSTime(){
@@ -254,4 +259,5 @@
     setInterval(showTime, 1000);
     showTime();
     setGPSTime();
+    startHRMonitor();
 })();
