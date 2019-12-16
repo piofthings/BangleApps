@@ -170,9 +170,10 @@
         var date = d.toString().substr(0, 15);
         buf.drawString(date, buf.getWidth() / 2, y + 8);
         // BPM
-        buf.setFont("12x16");
+        buf.setFont("6x8");
+        buf.setFontVector(12);
         buf.setFontAlign(0, -1);
-        buf.drawString(date, buf.getWidth() / 2, y + 8);
+        buf.drawString(lastHeartRate, buf.getWidth() / 2, y + 8 + 16);
 
         flip();
     }
