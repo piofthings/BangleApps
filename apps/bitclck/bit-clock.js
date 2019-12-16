@@ -176,8 +176,8 @@
         if (animInterval) return; // in animation - quit
         var t = "";
         var d = new Date();
-        if (lastTime == "     ") {
-            setGPSTime()
+        if (lastTime === "     ") {
+            setGPSTime();
         }
         var t = (" " + d.getHours()).substr(-2) + ":" +
             ("0" + d.getMinutes()).substr(-2);
@@ -231,13 +231,6 @@
         setTime(fix.time.getTime() / 1000);
         Bangle.setGPSPower(0);
     });
-
-    setInterval(function() {
-        g.drawImage(img, 48, 48, {
-            scale: 1.5,
-            rotate: Math.sin(getTime() * 2) / 2
-        });
-    }, 100);
 
     function setGPSTime(){
         Bangle.setGPSPower(1)
