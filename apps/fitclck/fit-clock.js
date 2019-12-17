@@ -1,11 +1,9 @@
-(function() { // make our own scope so this is GC'd when intervals are cleared
-    // Offscreen buffer
-
-    var Storage = require("Storage");
-    var fileName = "fitclk";
+(function() {
+    var s = require("Storage");
+    var fln = "fitclk";
     var currentFile = null;
-    var hrmPower = 0;
-    var gpsPower = 0;
+    var hrmp = 0;
+    var gpsP = 0;
 
     var buf = Graphics.createArrayBuffer(240, 128, 1, {
         msb: true
@@ -23,12 +21,8 @@
     var lastTime = "     ";
     // If animating, this is the interval's id
     var animInterval;
+    var lhr = "BPM: ";
 
-    var lastHeartRate = "BPM: ";
-
-    /* Get array of lines from digit d to d+1.
-     n is the amount (0..1)
-     maxFive is true is this digit only counts 0..5 */
     const DIGITS = {
         " ": n => [],
         "0": n => [
@@ -177,13 +171,13 @@
         var date = d.toString().substr(0, 15);
         buf.drawString(date, buf.getWidth() / 2, y + 8);
         // BPM
-        if(hrmPower == 1){
+        if(hrmp == 1){
                 buf.setFont("6x8");
                 buf.setFontVector(12);
                 buf.setFontAlign(0, -1);
-                buf.drawString(lastHeartRate, buf.getWidth() / 2, y + 8 + 16);
+                buf.drawString(lhr, buf.getWidth() / 2, y + 8 + 16);
         }
-        if(gpsPower == 1){
+        if(gpsP == 1){
             buf.setFont("6x8");
             buf.setFontVector(12);
             buf.setFontAlign(0, -1);
@@ -192,10 +186,9 @@
         flip();
     }
 
-    /* Show the current time, and animate if needed */
     function showTime() {
         if (!Bangle.isLCDOn()) return;
-        if (animInterval) return; // in animation - quit
+        if (animInterval) return;
         var t = "";
         var d = new Date();
         var t = (" " + d.getHours()).substr(-2) + ":" +
@@ -219,15 +212,6 @@
         lastTime = t;
     }
 
-    var lastFix = {
-        fix: 0,
-        alt: 0,
-        lat: 0,
-        lon: 0,
-        speed: 0,
-        time: 0,
-        satellites: 0
-    };
     var nofix = 0;
     var fix = null;
 
@@ -237,8 +221,6 @@
         var date = [fd[0], fd[1], fd[2]].join(" ");
         return time + " - " + date;
     }
-
-
     Bangle.on('lcdPower', function(on) {
         if (on) {
             showTime();
@@ -253,62 +235,45 @@
     });
 
     Bangle.on('HRM',function(hrm) {
-      /*hrm is an object containing:
-        { "bpm": number,             // Beats per minute
-          "confidence": number,      // 0-100 percentage confidence in the heart rate
-          "raw": Uint8Array,         // raw samples from heart rate monitor
-       }*/
-       lastHeartRate = "BPM: " + hrm.bpm;// + " " + hrm.confidence + " " + hrm.raw;
+       lhr = "BPM: " + hrm.bpm;
        var sentence = formatTime(new Date()) + "," + hrm.bpm + "," + hrm.confidence;
        log(sentence);
     });
 
     function setGPSTime(){
-        gpsPower = 1;
-        Bangle.setGPSPower(gpsPower);
+        gpsP = 1;
+        Bangle.setGPSPower(gpsP);
     }
 
     function startHRMonitor(){
-        hrmPower = 1;
-        Bangle.setHRMPower(hrmPower);
-    }
-
-    function openLogFile(){
-        file = Storage.open(fileName, "a");
+        hrmp = 1;
+        Bangle.setHRMPower(hrmp);
     }
 
     function log(sentence){
         file.write(sentence + "\n");
     }
 
-    function toggleHRM(){
-        hrmPower = hrmPower==0?1:0;
-        Bangle.setHRMPower(hrmPower);
+    function tHRM(){
+        hrmp = hrmp===0?1:0;
+        Bangle.setHRMPower(hrmp);
     }
 
-    function toggleGPS(){
-        gpsPower = gpsPower==0?1:0;
-        Bangle.setGPSPower(gpsPower);
+    function tGPS(){
+        gpsP = gpsP===0?1:0;
+        Bangle.setGPSPower(gpsP);
     }
 
-    function constructor() {
+    function ctor() {
         g.clear();
-        Storage.open("fitclk","a")
-        // Update time once a second
+        s.open("fitclk","a")
         setInterval(showTime, 1000);
         showTime();
         setGPSTime();
         startHRMonitor();
-        openLogFile();
-
-        setWatch(function() {
-          toggleHRM();
-        }, BTN2, {repeat:true});
-
-        setWatch(function() {
-          toggleGPS();
-      }, BTN3, {repeat:true});
+        file = s.open(fln, "a");
+        setWatch(tHRM, BTN2, {repeat:true});
+        setWatch(tGPS, BTN3, {repeat:true});
     }
-
-    constructor();
+    ctor();
 })();
