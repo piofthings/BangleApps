@@ -1,5 +1,12 @@
 (function() { // make our own scope so this is GC'd when intervals are cleared
     // Offscreen buffer
+
+    var Storage = require("Storage");
+    var fileName = "fitclk";
+    var currentFile = null;
+    var hrmPower = 0;
+    var gpsPower = 0;
+
     var buf = Graphics.createArrayBuffer(240, 128, 1, {
         msb: true
     });
@@ -170,11 +177,18 @@
         var date = d.toString().substr(0, 15);
         buf.drawString(date, buf.getWidth() / 2, y + 8);
         // BPM
-        buf.setFont("6x8");
-        buf.setFontVector(12);
-        buf.setFontAlign(0, -1);
-        buf.drawString(lastHeartRate, buf.getWidth() / 2, y + 8 + 16);
-
+        if(hrmPower == 1){
+                buf.setFont("6x8");
+                buf.setFontVector(12);
+                buf.setFontAlign(0, -1);
+                buf.drawString(lastHeartRate, buf.getWidth() / 2, y + 8 + 16);
+        }
+        if(gpsPower == 1){
+            buf.setFont("6x8");
+            buf.setFontVector(12);
+            buf.setFontAlign(0, -1);
+            buf.drawString("GPS ON", buf.getWidth() / 2, y + 8 + 32);
+        }
         flip();
     }
 
@@ -245,20 +259,56 @@
           "raw": Uint8Array,         // raw samples from heart rate monitor
        }*/
        lastHeartRate = "BPM: " + hrm.bpm;// + " " + hrm.confidence + " " + hrm.raw;
+       var sentence = formatTime(new Date()) + "," + hrm.bpm + "," + hrm.confidence;
+       log(sentence);
     });
 
     function setGPSTime(){
-        Bangle.setGPSPower(1);
+        gpsPower = 1;
+        Bangle.setGPSPower(gpsPower);
     }
 
     function startHRMonitor(){
-        Bangle.setHRMPower(1);
+        hrmPower = 1;
+        Bangle.setHRMPower(hrmPower);
     }
 
-    g.clear();
-    // Update time once a second
-    setInterval(showTime, 1000);
-    showTime();
-    setGPSTime();
-    startHRMonitor();
+    function openLogFile(){
+        file = Storage.open(fileName, "a");
+    }
+
+    function log(sentence){
+        file.write(sentence + "\n");
+    }
+
+    function toggleHRM(){
+        hrmPower = hrmPower==0?1:0;
+        Bangle.setHRMPower(hrmPower);
+    }
+
+    function toggleGPS(){
+        gpsPower = gpsPower==0?1:0;
+        Bangle.setGPSPower(gpsPower);
+    }
+
+    function constructor() {
+        g.clear();
+        Storage.open("fitclk","a")
+        // Update time once a second
+        setInterval(showTime, 1000);
+        showTime();
+        setGPSTime();
+        startHRMonitor();
+        openLogFile();
+
+        setWatch(function() {
+          toggleHRM();
+        }, BTN2, {repeat:true});
+
+        setWatch(function() {
+          toggleGPS();
+      }, BTN3, {repeat:true});
+    }
+
+    constructor();
 })();
