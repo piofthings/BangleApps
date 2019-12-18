@@ -272,7 +272,7 @@
         setGPSTime();
         startHRMonitor();
         file = s.open(fln, "a");
-        setWatch(tHRM, BTN2, {repeat:true});
+        setWatch(tHRM, BTN1, {repeat:true});
         setWatch(tGPS, BTN3, {repeat:true});
     }
     ctor();
