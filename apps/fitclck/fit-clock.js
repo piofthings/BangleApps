@@ -274,6 +274,8 @@
         file = s.open(fln, "a");
         setWatch(tHRM, BTN1, {repeat:true});
         setWatch(tGPS, BTN3, {repeat:true});
+        const fitGps = require('./fit-gps');
     }
     ctor();
+
 })();
