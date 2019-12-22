@@ -2,7 +2,7 @@
   { "id": "boot",
     "name": "Bootloader",
     "icon": "bootloader.png",
-    "version":"0.02",
+    "version":"0.03",
     "description": "This is needed by Bangle.js to automatically load the clock, menu, widgets and settings",
     "tags": "tool,system",
     "storage": [
@@ -623,19 +623,32 @@
       {"name":"-blobclk","url":"clock-blob.js"},
       {"name":"*blobclk","url":"clock-blob-icon.js","evaluate":true}
     ]
-},
-{ "id": "fitclck",
-  "name": "Fit Clock",
-  "icon": "fit-clock.png",
-  "version":"0.01",
-  "description": "Fit Clock tries to mimic functions of a fitness watch by providing clock, GPS, heart rate monitoring all bundled into a single app",
-  "tags": "clock",
-  "type": "clock",
-  "storage": [
-    {"name":"+fitclck","url":"fit-clock.json"},
-    {"name":"-fitclck","url":"fit-clock.js"},
-    {"name":"*fitclck","url":"fit-clock-icon.js","evaluate":true}
-  ]
-}
+  },
+  { "id": "berlinc",
+    "name": "Berlin Clock",
+    "icon": "berlin-clock.png",
+    "description": "Berlin Clock (see https://en.wikipedia.org/wiki/Mengenlehreuhr)",
+    "tags": "clock",
+    "type":"clock",
+    "allow_emulator":true,
+    "storage": [
+      {"name":"+berlinc","url":"berlin-clock.json"},
+      {"name":"-berlinc","url":"berlin-clock.js"},
+      {"name":"*berlinc","url":"berlin-clock-icon.js","evaluate":true}
+    ]
+  },
+  { "id": "fitclck",
+    "name": "Fit Clock",
+    "icon": "fit-clock.png",
+    "version":"0.01",
+    "description": "Fit Clock tries to mimic functions of a fitness watch by providing clock, GPS, heart rate monitoring all bundled into a single app",
+    "tags": "clock",
+    "type": "clock",
+    "storage": [
+      {"name":"+fitclck","url":"fit-clock.json"},
+      {"name":"-fitclck","url":"fit-clock.js"},
+      {"name":"*fitclck","url":"fit-clock-icon.js","evaluate":true}
+    ]
+  }
 
 ]
