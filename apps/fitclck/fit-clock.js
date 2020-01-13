@@ -230,6 +230,7 @@
 
     Bangle.on('GPS', function(f) {
         fix = f;
+        console.log(JSON.stringify(fix));
         setTime(fix.time.getTime() / 1000);
         Bangle.setGPSPower(0);
     });
