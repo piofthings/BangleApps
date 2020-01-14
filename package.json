@@ -1,0 +1,30 @@
+{
+  "name": "bangleapps",
+  "version": "1.0.0",
+  "description": "Bangle.js App Loader (and Apps) ================================",
+  "main": "index.js",
+  "bin": {
+    "bangleapps": "firmwaremaker.js"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/piofthings/BangleApps.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/piofthings/BangleApps/issues"
+  },
+  "homepage": "https://github.com/piofthings/BangleApps#readme",
+  "dependencies": {
+    "gulp": "^4.0.2",
+    "gulp-terser": "^1.2.0"
+  },
+  "devDependencies": {}
+}
