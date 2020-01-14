@@ -4,7 +4,7 @@
     var currentFile = null;
     var hrmp = 0;
     var gpsP = 0;
-
+    var fix = null;
     var buf = Graphics.createArrayBuffer(240, 128, 1, {
         msb: true
     });
@@ -181,7 +181,13 @@
             buf.setFont("6x8");
             buf.setFontVector(12);
             buf.setFontAlign(0, -1);
-            buf.drawString("GPS ON", buf.getWidth() / 2, y + 8 + 32);
+            buf.drawString("GPS ON" , buf.getWidth() / 2, y + 8 + 32);
+            if(fix != null && fix.satellites > 0){
+                buf.setFont("6x8");
+                buf.setFontVector(6);
+                buf.setFontAlign(0, -1);
+                buf.drawString(fix.satellites + " satellites" , buf.getWidth() / 2, y + 8 + 32 + 32);
+            }
         }
         flip();
     }
@@ -212,9 +218,6 @@
         lastTime = t;
     }
 
-    var nofix = 0;
-    var fix = null;
-
     function formatTime(now) {
         var fd = now.toUTCString().split(" ");
         var time = fd[4].substr(0, 5);
@@ -231,8 +234,10 @@
     Bangle.on('GPS', function(f) {
         fix = f;
         console.log(JSON.stringify(fix));
-        setTime(fix.time.getTime() / 1000);
-        Bangle.setGPSPower(0);
+        (fix.satellites > 0){
+            setTime(fix.time.getTime() / 1000);
+            Bangle.setGPSPower(0);
+        }
     });
 
     Bangle.on('HRM',function(hrm) {
@@ -252,7 +257,7 @@
     }
 
     function log(sentence){
-        file.write(sentence + "\n");
+        //file.write(sentence + "\n");
     }
 
     function tHRM(){
@@ -275,7 +280,6 @@
         file = s.open(fln, "a");
         setWatch(tHRM, BTN1, {repeat:true});
         setWatch(tGPS, BTN3, {repeat:true});
-        const fitGps = require('./fit-gps');
     }
     ctor();
 
