@@ -5,6 +5,8 @@
     var hrmp = 0;
     var gpsP = 0;
     var fix = null;
+    var fixMissedCount = 0;
+    var fixMissedTimeout = 180;
     var buf = Graphics.createArrayBuffer(240, 128, 1, {
         msb: true
     });
@@ -184,6 +186,7 @@
             buf.drawString("GPS ON" , buf.getWidth() / 2, y + 8 + 32);
             if(fix != null && fix.satellites > 0){
                 buf.setFont("6x8");
+                buf.setFontVector(12);
                 buf.setFontAlign(0, -1);
                 buf.drawString(fix.satellites + " satellites" , buf.getWidth() / 2, y + 8 + 48);
             }
@@ -233,8 +236,21 @@
     Bangle.on('GPS', function(f) {
         fix = f;
         console.log(JSON.stringify(fix));
-        if(fix.satellites > 0){
+        if(fix.satellites > 0 && fixMissedCount < fixMissedTimeout){
+            fixMissedCount = 0;
             setTime(fix.time.getTime() / 1000);
+        }
+        else{
+            ++fixMissedCount;
+            /* GPS function is pinged every second so if
+            * Satellites are not found for 2 minutes
+            * disable GPS
+            */
+            if(fixMissedCount >= fixMissedTimeout){
+                fixMissedCount = 0;
+                gpsP = 0;
+                Bangle.setGPSPower(gpsP);
+            }
         }
     });
 
