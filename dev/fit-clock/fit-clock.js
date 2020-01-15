@@ -184,9 +184,8 @@
             buf.drawString("GPS ON" , buf.getWidth() / 2, y + 8 + 32);
             if(fix != null && fix.satellites > 0){
                 buf.setFont("6x8");
-                buf.setFontVector(6);
                 buf.setFontAlign(0, -1);
-                buf.drawString(fix.satellites + " satellites" , buf.getWidth() / 2, y + 8 + 32 + 32);
+                buf.drawString(fix.satellites + " satellites" , buf.getWidth() / 2, y + 8 + 48);
             }
         }
         flip();
@@ -236,7 +235,6 @@
         console.log(JSON.stringify(fix));
         if(fix.satellites > 0){
             setTime(fix.time.getTime() / 1000);
-            Bangle.setGPSPower(0);
         }
     });
 

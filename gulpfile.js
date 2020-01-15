@@ -6,11 +6,11 @@ function minify() {
         .pipe(terser())
         .pipe(dest('apps/fitclck'));
 }
-function js(){
-    return src(['dev/**/*.json','dev/**/*.png'], { base: 'dev'})
-        .pipe(dest("apps"));
+function assets(){
+    return src(['dev/**/*.json','dev/**/*.png'], { base: 'dev/fit-clock'})
+        .pipe(dest("apps/fitclck"));
 }
 exports.minify = minify;
-exports.js = js;
+exports.assets = assets;
 
-exports.default = parallel(minify);
+exports.default = parallel(minify, assets);
