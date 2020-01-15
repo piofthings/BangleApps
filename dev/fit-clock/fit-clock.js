@@ -7,7 +7,7 @@
     var fix = null;
     var fixMissedCount = 0;
     var fixMissedTimeout = 180;
-    var buf = Graphics.createArrayBuffer(240, 128, 1, {
+    var buf = Graphics.createArrayBuffer(240, 240, 1, {
         msb: true
     });
 
