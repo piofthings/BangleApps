@@ -1,6 +1,6 @@
 (function() {
     var s = require("Storage");
-    var fln = "fitclk";
+    var fln = "ftclog";
     var currentFile = null;
     var hrmp = 0;
     var gpsP = 0;
