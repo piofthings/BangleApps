@@ -186,7 +186,7 @@
             buf.drawString("GPS ON" , buf.getWidth() / 2, y + 8 + 32);
             if(fix != null && fix.satellites > 0){
                 buf.setFont("6x8");
-                buf.setFontVector(12);
+                buf.setFontVector(8);
                 buf.setFontAlign(0, -1);
                 buf.drawString(fix.satellites + " satellites" , buf.getWidth() / 2, y + 8 + 48);
             }
@@ -239,6 +239,8 @@
         if(fix.satellites > 0 && fixMissedCount < fixMissedTimeout){
             fixMissedCount = 0;
             setTime(fix.time.getTime() / 1000);
+            var sentence = "GPS," + fix.satellites + ","+ fix.lat + "," + fix.lon + ","+ fix.alt + "," + fix.speed + "," + fix.course + "," + fix.time.ms;
+            log(sentence);
         }
         else{
             ++fixMissedCount;
@@ -256,7 +258,7 @@
 
     Bangle.on('HRM',function(hrm) {
        lhr = "BPM: " + hrm.bpm;
-       var sentence = formatTime(new Date()) + "," + hrm.bpm + "," + hrm.confidence;
+       var sentence = "HRM," + formatTime(new Date()) + "," + hrm.bpm + "," + hrm.confidence;
        log(sentence);
     });
 
@@ -271,7 +273,7 @@
     }
 
     function log(sentence){
-        //file.write(sentence + "\n");
+        file.write(sentence + "\n");
     }
 
     function tHRM(){
