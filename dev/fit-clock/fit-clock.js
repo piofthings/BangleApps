@@ -235,7 +235,6 @@
 
     Bangle.on('GPS', function(f) {
         fix = f;
-        //console.log(JSON.stringify(fix));
         if(fix.satellites > 0 && fixMissedCount < fixMissedTimeout){
             fixMissedCount = 0;
             setTime(fix.time.getTime() / 1000);
@@ -273,7 +272,7 @@
     }
 
     function log(sentence){
-        file.write(sentence + "\n");
+        currentFile.write(sentence + "\n");
     }
 
     function tHRM(){
@@ -292,7 +291,7 @@
         showTime();
         setGPSTime();
         startHRMonitor();
-        file = s.open(fln, "a");
+        currentFile = s.open(fln, "a");
         setWatch(tHRM, BTN1, {repeat:true});
         setWatch(tGPS, BTN3, {repeat:true});
     }
