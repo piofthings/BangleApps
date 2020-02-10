@@ -235,7 +235,7 @@
 
     Bangle.on('GPS', function(f) {
         fix = f;
-        console.log(JSON.stringify(fix));
+        //console.log(JSON.stringify(fix));
         if(fix.satellites > 0 && fixMissedCount < fixMissedTimeout){
             fixMissedCount = 0;
             setTime(fix.time.getTime() / 1000);
@@ -288,7 +288,6 @@
 
     function ctor() {
         g.clear();
-        s.open("fitclk","a")
         setInterval(showTime, 1000);
         showTime();
         setGPSTime();
