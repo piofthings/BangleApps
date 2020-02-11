@@ -1,5 +1,6 @@
 {
-  "name":"Simple Clock","type":"clock",
+  "name":"Simple Clock",
+  "type":"clock",
   "icon":"*sclock",
   "src":"-sclock",
   "sortorder":-10

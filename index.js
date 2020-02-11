@@ -1,5 +1,6 @@
 var appJSON = []; // List of apps and info from apps.json
 var appsInstalled = []; // list of app JSON
+var files = []; // list of files on Bangle
 
 httpGet("apps.json").then(apps=>{
   try {
@@ -85,6 +86,8 @@ function showPrompt(title, text) {
   });
 }
 function handleCustomApp(app) {
+  // Pops up an IFRAME that allows an app to be customised
+  if (!app.custom) throw new Error("App doesn't have custom HTML");
   return new Promise((resolve,reject) => {
     var modal = htmlElement(`<div class="modal active">
       <a href="#close" class="modal-overlay " aria-label="Close"></a>
@@ -118,6 +121,62 @@ function handleCustomApp(app) {
     }, false);
   });
 }
+
+function handleAppInterface(app) {
+  // IFRAME interface window that can be used to get data from the app
+  if (!app.interface) throw new Error("App doesn't have interface HTML");
+  return new Promise((resolve,reject) => {
+    var modal = htmlElement(`<div class="modal active">
+      <a href="#close" class="modal-overlay " aria-label="Close"></a>
+      <div class="modal-container" style="height:100%">
+        <div class="modal-header">
+          <a href="#close" class="btn btn-clear float-right" aria-label="Close"></a>
+          <div class="modal-title h5">${escapeHtml(app.name)}</div>
+        </div>
+        <div class="modal-body" style="height:100%">
+          <div class="content" style="height:100%">
+            <iframe style="width:100%;height:100%;border:0px;">
+          </div>
+        </div>
+      </div>
+    </div>`);
+    document.body.append(modal);
+    htmlToArray(modal.getElementsByTagName("a")).forEach(button => {
+      button.addEventListener("click",event => {
+        event.preventDefault();
+        modal.remove();
+        //reject("Window closed");
+      });
+    });
+    var iframe = modal.getElementsByTagName("iframe")[0];
+    iframe.onload = function() {
+      var iwin = iframe.contentWindow;
+      iwin.addEventListener("message", function(event) {
+        var msg = event.data;
+        if (msg.type=="eval") {
+          Puck.eval(msg.data, function(result) {
+            iwin.postMessage({
+              type : "evalrsp",
+              data : result,
+              id : msg.id
+            });
+          });
+        } else if (msg.type=="write") {
+          Puck.write(msg.data, function(result) {
+            iwin.postMessage({
+              type : "writersp",
+              data : result,
+              id : msg.id
+            });
+          });
+        }
+      }, false);
+      iwin.postMessage({type:"init"});
+    };
+    iframe.src = `apps/${app.id}/${app.interface}`;
+  });
+}
+
 // ===========================================  Top Navigation
 function showTab(tabname) {
   htmlToArray(document.querySelectorAll("#tab-navigate .tab-item")).forEach(tab => {
@@ -148,19 +207,10 @@ function refreshLibrary() {
   }
 
   panelbody.innerHTML = visibleApps.map((app,idx) => {
-    var icon = "icon-upload";
-    var versionInfo = app.version || "";
-    if (app.custom)
-      icon = "icon-menu";
-    if (appsInstalled.find(a=>a.id==app.id)) {
-      icon = "icon-delete";
-      versionInfo+=" installed";
-    }
-    var buttons = "";
+    var appInstalled = appsInstalled.find(a=>a.id==app.id);
+    var version = getVersionInfo(app, appInstalled);
+    var versionInfo = version.text;
     if (versionInfo) versionInfo = " <small>("+versionInfo+")</small>";
-    if (app.allow_emulator)
-      buttons += `<button class="btn btn-link btn-action btn-lg" title="Try in Emulator"><i class="icon icon-share" appid="${app.id}"></i></button>`;
-    buttons += `<button class="btn btn-link btn-action btn-lg"><i class="icon ${icon}" appid="${app.id}"></i></button>`;
     return `<div class="tile column col-6 col-sm-12 col-xs-12">
     <div class="tile-icon">
       <figure class="avatar"><img src="apps/${app.icon?`${app.id}/${app.icon}`:"unknown.png"}" alt="${escapeHtml(app.name)}"></figure>
@@ -170,7 +220,12 @@ function refreshLibrary() {
       <p class="tile-subtitle">${escapeHtml(app.description)}</p>
     </div>
     <div class="tile-action">
-      ${buttons}
+      <button class="btn btn-link btn-action btn-lg ${(appInstalled&&app.interface)?"":"d-hide"}" appid="${app.id}" title="Download data from app"><i class="icon icon-download"></i></button>
+      <button class="btn btn-link btn-action btn-lg ${app.allow_emulator?"":"d-hide"}" appid="${app.id}" title="Try in Emulator"><i class="icon icon-share"></i></button>
+      <button class="btn btn-link btn-action btn-lg ${version.canUpdate?"":"d-hide"}" appid="${app.id}" title="Update App"><i class="icon icon-refresh"></i></button>
+      <button class="btn btn-link btn-action btn-lg ${!appInstalled?"":"d-hide"}" appid="${app.id}" title="Upload App"><i class="icon icon-upload"></i></button>
+      <button class="btn btn-link btn-action btn-lg ${appInstalled?"":"d-hide"}" appid="${app.id}" title="Remove App"><i class="icon icon-delete"></i></button>
+      <button class="btn btn-link btn-action btn-lg ${app.custom?"":"d-hide"}" appid="${app.id}" title="Customise and Upload App"><i class="icon icon-menu"></i></button>
     </div>
   </div>
   `;}).join("");
@@ -180,10 +235,12 @@ function refreshLibrary() {
   tab.setAttribute("data-badge", appJSON.length);
   htmlToArray(panelbody.getElementsByTagName("button")).forEach(button => {
     button.addEventListener("click",event => {
-      var icon = event.target;
-      var appid = icon.getAttribute("appid");
-      var app = appJSON.find(app=>app.id==appid);
-      if (!app) return;
+      var button = event.currentTarget;
+      var icon = button.firstChild;
+      var appid = button.getAttribute("appid");
+      var app = appNameToApp(appid);
+      if (!app) throw new Error("App "+appid+" not found");
+      // check icon to figure out what we should do
       if (icon.classList.contains("icon-share")) {
         // emulator
         var file = app.storage.find(f=>f.name[0]=='-');
@@ -195,6 +252,7 @@ function refreshLibrary() {
         var url = baseurl+"apps/"+app.id+"/"+file.url;
         window.open(`https://espruino.com/ide/emulator.html?codeurl=${url}&upload`);
       } else if (icon.classList.contains("icon-upload")) {
+        // upload
         icon.classList.remove("icon-upload");
         icon.classList.add("loading");
         Comms.uploadApp(app).then((appJSON) => {
@@ -203,12 +261,14 @@ function refreshLibrary() {
           icon.classList.remove("loading");
           icon.classList.add("icon-delete");
           refreshMyApps();
+          refreshLibrary();
         }).catch(err => {
           showToast("Upload failed, "+err, "error");
           icon.classList.remove("loading");
           icon.classList.add("icon-upload");
         });
       } else if (icon.classList.contains("icon-menu")) {
+        // custom HTML update
         if (app.custom) {
           icon.classList.remove("icon-menu");
           icon.classList.add("loading");
@@ -218,16 +278,25 @@ function refreshLibrary() {
             icon.classList.remove("loading");
             icon.classList.add("icon-delete");
             refreshMyApps();
+            refreshLibrary();
           }).catch(err => {
             showToast("Customise failed, "+err, "error");
             icon.classList.remove("loading");
             icon.classList.add("icon-menu");
           });
         }
-      } else {
+      } else if (icon.classList.contains("icon-delete")) {
+        // Remove app
         icon.classList.remove("icon-delete");
         icon.classList.add("loading");
         removeApp(app);
+      } else if (icon.classList.contains("icon-refresh")) {
+        // Update app
+        icon.classList.remove("icon-refresh");
+        icon.classList.add("loading");
+        updateApp(app);
+      } else if (icon.classList.contains("icon-download")) {
+        handleAppInterface(app);
       }
     });
   });
@@ -238,16 +307,32 @@ refreshLibrary();
 
 function removeApp(app) {
   return showPrompt("Delete","Really remove '"+app.name+"'?").then(() => {
-    Comms.removeApp(app).then(()=>{
-      appsInstalled = appsInstalled.filter(a=>a.id!=app.id);
-      showToast(app.name+" removed successfully","success");
-      refreshMyApps();
-      refreshLibrary();
-    }, err=>{
-      showToast(app.name+" removal failed, "+err,"error");
-    });
+    return Comms.removeApp(app);
+  }).then(()=>{
+    appsInstalled = appsInstalled.filter(a=>a.id!=app.id);
+    showToast(app.name+" removed successfully","success");
+    refreshMyApps();
+    refreshLibrary();
+  }, err=>{
+    showToast(app.name+" removal failed, "+err,"error");
   });
 }
+
+function updateApp(app) {
+  Comms.removeApp(app).then(()=>{
+    showToast(app.name+" removed successfully. Updating...",);
+    appsInstalled = appsInstalled.filter(a=>a.id!=app.id);
+    return Comms.uploadApp(app);
+  }).then((appJSON) => {
+    if (appJSON) appsInstalled.push(appJSON);
+    showToast(app.name+" Updated!", "success");
+    refreshMyApps();
+    refreshLibrary();
+  }, err=>{
+    showToast(app.name+" update failed, "+err,"error");
+  });
+}
+
 
 function appNameToApp(appName) {
   var app = appJSON.find(app=>app.id==appName);
@@ -264,9 +349,9 @@ function appNameToApp(appName) {
   };
 }
 
-function showLoadingIndicator() {
-  var panelbody = document.querySelector("#myappscontainer .panel-body");
-  var tab = document.querySelector("#tab-myappscontainer a");
+function showLoadingIndicator(id) {
+  var panelbody = document.querySelector(`#${id} .panel-body`);
+  var tab = document.querySelector(`#tab-${id} a`);
   // set badge up top
   tab.classList.add("badge");
   tab.setAttribute("data-badge", "");
@@ -278,49 +363,55 @@ function refreshMyApps() {
   var panelbody = document.querySelector("#myappscontainer .panel-body");
   var tab = document.querySelector("#tab-myappscontainer a");
   tab.setAttribute("data-badge", appsInstalled.length);
-  panelbody.innerHTML = appsInstalled.map(appJSON => {
-var app = appNameToApp(appJSON.id);
-var version = "";
-if (!appJSON.version) {
-  version = "Unknown version";
-  if (app.version) version += ", latest "+app.version;
-} else {
-  version = appJSON.version;
-  if (app.version == appJSON.version) version += ", up to date";
-  else if (app.version) version += ", latest "+app.version;
-}
+  panelbody.innerHTML = appsInstalled.map(appInstalled => {
+var app = appNameToApp(appInstalled.id);
+var version = getVersionInfo(app, appInstalled);
 return `<div class="tile column col-6 col-sm-12 col-xs-12">
     <div class="tile-icon">
       <figure class="avatar"><img src="apps/${app.icon?`${app.id}/${app.icon}`:"unknown.png"}" alt="${escapeHtml(app.name)}"></figure>
     </div>
     <div class="tile-content">
-      <p class="tile-title text-bold">${escapeHtml(app.name)} <small>(${version})</small></p>
+      <p class="tile-title text-bold">${escapeHtml(app.name)} <small>(${version.text})</small></p>
       <p class="tile-subtitle">${escapeHtml(app.description)}</p>
     </div>
     <div class="tile-action">
-      <button class="btn btn-link btn-action btn-lg"><i class="icon icon-delete" appid="${app.id}"></i></button>
+      <button class="btn btn-link btn-action btn-lg ${(appInstalled&&app.interface)?"":"d-hide"}" appid="${app.id}" title="Download data from app"><i class="icon icon-download"></i></button>
+      <button class="btn btn-link btn-action btn-lg ${version.canUpdate?'':'d-hide'}" appid="${app.id}" title="Update App"><i class="icon icon-refresh"></i></button>
+      <button class="btn btn-link btn-action btn-lg" appid="${app.id}" title="Remove App"><i class="icon icon-delete"></i></button>
     </div>
   </div>
   `}).join("");
   htmlToArray(panelbody.getElementsByTagName("button")).forEach(button => {
     button.addEventListener("click",event => {
-      var icon = event.target;
-      var appid = icon.getAttribute("appid");
+      var button = event.currentTarget;
+      var icon = button.firstChild;
+      var appid = button.getAttribute("appid");
       var app = appNameToApp(appid);
-      removeApp(app);
+      if (!app) throw new Error("App "+appid+" not found");
+      // check icon to figure out what we should do
+      if (icon.classList.contains("icon-delete")) removeApp(app);
+      if (icon.classList.contains("icon-refresh")) updateApp(app);
+      if (icon.classList.contains("icon-download")) handleAppInterface(app)
     });
   });
 }
 
 function getInstalledApps() {
-  showLoadingIndicator();
-  // Get apps
-  return Comms.getInstalledApps().then(appJSON => {
-    appsInstalled = appJSON;
-    handleConnectionChange(true);
-    refreshMyApps();
-    refreshLibrary();
-  });
+  showLoadingIndicator("myappscontainer");
+  showLoadingIndicator("myfscontainer");
+  // Get apps and files
+  return Comms.getInstalledApps()
+    .then(appJSON => {
+      appsInstalled = appJSON;
+      refreshMyApps();
+      refreshLibrary();
+    })
+    .then(Comms.listFiles)
+    .then(list => {
+      files = list;
+      refreshMyFS();
+    })
+    .then(() => handleConnectionChange(true));
 }
 
 var connectMyDeviceBtn = document.getElementById("connectmydevice");
@@ -330,11 +421,11 @@ function handleConnectionChange(connected) {
   connectMyDeviceBtn.classList.toggle('is-connected', connected);
 }
 
-document.getElementById("myappsrefresh").addEventListener("click", () => {
+htmlToArray(document.querySelectorAll(".btn.refresh")).map(button => button.addEventListener("click", () => {
   getInstalledApps().catch(err => {
     showToast("Getting app list failed, "+err,"error");
   });
-});
+}));
 connectMyDeviceBtn.addEventListener("click", () => {
   if (connectMyDeviceBtn.classList.contains('is-connected')) {
     Comms.disconnectDevice();
@@ -364,6 +455,45 @@ librarySearchInput.addEventListener('input', evt => {
   refreshLibrary();
 });
 
+
+// =========================================== My Files
+
+function refreshMyFS() {
+  var panelbody = document.querySelector("#myfscontainer .panel-body");
+  var tab = document.querySelector("#tab-myfscontainer a");
+  tab.setAttribute("data-badge", files.length);
+  panelbody.innerHTML = `
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody>${
+    files.map(file =>
+      `<tr data-name="${file}"><td>${escapeHtml(file)}</td><td>${fileType(file).name}</td></li>`
+    ).join("")}
+    </tbody>`;
+
+  htmlToArray(panelbody.getElementsByTagName("tr")).forEach(row => {
+    row.addEventListener("click",event => {
+      var name = event.target.closest('tr').dataset.name;
+      const type = fileType(name);
+      Comms.readFile(name).then(content => content.length && saveAs(new Blob([content], type), name));
+    });
+  });
+}
+
+function fileType(file) {
+  switch (file[0]) {
+    case "+": return { name: "App descriptor", type: "application/json;charset=utf-8" };
+    case "*": return { name: "App icon", type: "text/plain;charset=utf-8" };
+    case "-": return { name: "App code", type: "application/javascript;charset=utf-8" };
+    case "=": return { name: "Boot-time code", type: "application/javascript;charset=utf-8" };
+    default: return { name: "Plain", type: "text/plain;charset=utf-8" };
+  }
+}
+
 // =========================================== About
 
 document.getElementById("settime").addEventListener("click",event=>{
@@ -375,13 +505,46 @@ document.getElementById("settime").addEventListener("click",event=>{
 });
 document.getElementById("removeall").addEventListener("click",event=>{
   showPrompt("Remove All","Really remove all apps?").then(() => {
-    Comms.removeAllApps().then(()=>{
-      appsInstalled = [];
-      showToast("All apps removed","success");
-      refreshMyApps();
-      refreshLibrary();
-    }, err=>{
-      showToast("App removal failed, "+err,"error");
+    return Comms.removeAllApps();
+  }).then(()=>{
+    appsInstalled = [];
+    showToast("All apps removed","success");
+    return getInstalledApps();
+  }).catch(err=>{
+    showToast("App removal failed, "+err,"error");
+  });
+});
+// Install all default apps in one go
+document.getElementById("installdefault").addEventListener("click",event=>{
+  var defaultApps, appCount;
+  httpGet("defaultapps.json").then(json=>{
+    defaultApps = JSON.parse(json);
+    defaultApps = defaultApps.map( appid => appJSON.find(app=>app.id==appid) );
+    if (defaultApps.some(x=>x===undefined))
+      throw "Not all apps found";
+    appCount = defaultApps.length;
+    return showPrompt("Install Defaults","Remove everything and install default apps?");
+  }).then(() => {
+    return Comms.removeAllApps();
+  }).then(()=>{
+    appsInstalled = [];
+    showToast(`Existing apps removed. Installing  ${appCount} apps...`);
+    return new Promise(resolve => {
+      function upload() {
+        var app = defaultApps.shift();
+        if (app===undefined) return resolve();
+        Comms.uploadApp(app).then((appJSON) => {
+          if (appJSON) appsInstalled.push(appJSON);
+          showToast(`(${appCount-defaultApps.length}/${appCount}) ${app.name} Uploaded`);
+          upload();
+        });
+      }
+      upload();
     });
+  }).then(()=>{
+    showToast("Default apps successfully installed!","success");
+    return getInstalledApps();
+  }).catch(err=>{
+    showToast("App Install failed, "+err,"error");
   });
 });
