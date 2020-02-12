@@ -2,11 +2,12 @@
     var s = require("Storage");
     var fln = "ftclog";
     var currentFile = null;
-    var hrmp = 0;
-    var gpsP = 0;
+    var hrmPower = 0;
+    var gpsPower = 0;
     var fix = null;
     var fixMissedCount = 0;
     var fixMissedTimeout = 180;
+    var steps = 0;
     var buf = Graphics.createArrayBuffer(240, 240, 1, {
         msb: true
     });
@@ -173,13 +174,13 @@
         var date = d.toString().substr(0, 15);
         buf.drawString(date, buf.getWidth() / 2, y + 8);
         // BPM
-        if(hrmp == 1){
+        if(hrmPower == 1){
                 buf.setFont("6x8");
                 buf.setFontVector(12);
                 buf.setFontAlign(0, -1);
                 buf.drawString(lhr, buf.getWidth() / 2, y + 8 + 16);
         }
-        if(gpsP == 1){
+        if(gpsPower == 1){
             buf.setFont("6x8");
             buf.setFontVector(12);
             buf.setFontAlign(0, -1);
@@ -233,6 +234,10 @@
         }
     });
 
+    Bangle.on('step', function(f){
+        steps++;
+    });
+
     Bangle.on('GPS', function(f) {
         fix = f;
         if(fix.satellites > 0 && fixMissedCount < fixMissedTimeout){
@@ -249,8 +254,8 @@
             */
             if(fixMissedCount >= fixMissedTimeout){
                 fixMissedCount = 0;
-                gpsP = 0;
-                Bangle.setGPSPower(gpsP);
+                gpsPower = 0;
+                Bangle.setGPSPower(gpsPower);
             }
         }
     });
@@ -262,13 +267,13 @@
     });
 
     function setGPSTime(){
-        gpsP = 1;
-        Bangle.setGPSPower(gpsP);
+        gpsPower = 1;
+        Bangle.setGPSPower(gpsPower);
     }
 
     function startHRMonitor(){
-        hrmp = 1;
-        Bangle.setHRMPower(hrmp);
+        hrmPower = 1;
+        Bangle.setHRMPower(hrmPower);
     }
 
     function log(sentence){
@@ -276,13 +281,13 @@
     }
 
     function tHRM(){
-        hrmp = hrmp===0?1:0;
-        Bangle.setHRMPower(hrmp);
+        hrmPower = hrmPower===0?1:0;
+        Bangle.setHRMPower(hrmPower);
     }
 
     function tGPS(){
-        gpsP = gpsP===0?1:0;
-        Bangle.setGPSPower(gpsP);
+        gpsPower = gpsPower===0?1:0;
+        Bangle.setGPSPower(gpsPower);
     }
 
     function ctor() {
