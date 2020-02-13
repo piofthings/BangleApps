@@ -8,9 +8,11 @@
     var fixMissedCount = 0;
     var fixMissedTimeout = 180;
     var steps = 0;
+    var lastStepDate = null;
     var buf = Graphics.createArrayBuffer(240, 240, 1, {
         msb: true
     });
+
 
     function flip() {
         g.setColor(1, 1, 1);
@@ -235,7 +237,16 @@
     });
 
     Bangle.on('step', function(f){
-        steps++;
+        var currentDate = new Date();
+        if(previousDate.getDate() == currentDate.getDate()){
+            steps++;
+        }
+        else{
+            steps = 1;
+        }
+        previousDate = currentDate;
+        var sentence = `"STEP","${formatTime(previousDate)}","${step}"`;
+        log(sentence);
     });
 
     Bangle.on('GPS', function(f) {
@@ -243,7 +254,7 @@
         if(fix.satellites > 0 && fixMissedCount < fixMissedTimeout){
             fixMissedCount = 0;
             setTime(fix.time.getTime() / 1000);
-            var sentence = "GPS," + fix.satellites + ","+ fix.lat + "," + fix.lon + ","+ fix.alt + "," + fix.speed + "," + fix.course + "," + fix.time.ms;
+            var sentence = `"GPS","${formatTime(new Date())}","${fix.satellites}","${fix.lat}","${fix.lon}","${fix.alt}","${fix.speed}","${fix.course}","${fix.time.ms}"`;
             log(sentence);
         }
         else{
