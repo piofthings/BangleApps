@@ -9,10 +9,10 @@
     var fixMissedTimeout = 180;
     var steps = 0;
     var lastStepDate = null;
+    var previousDate = new Date();
     var buf = Graphics.createArrayBuffer(240, 240, 1, {
         msb: true
     });
-
 
     function flip() {
         g.setColor(1, 1, 1);
@@ -194,6 +194,11 @@
                 buf.drawString(fix.satellites + " satellites" , buf.getWidth() / 2, y + 8 + 48);
             }
         }
+        if(steps > 0){
+            buf.setFont("6x8");
+            buf.setFontAlign(0, -1);
+            buf.drawString("Steps " + steps, buf.getWidth() / 2, y + 8 + 64);
+        }
         flip();
     }
 
@@ -233,6 +238,8 @@
         if (on) {
             showTime();
             drawWidgets();
+            var sentence = `"STEP","${formatTime(previousDate)}","${steps}"`;
+            log(sentence);
         }
     });
 
@@ -245,8 +252,8 @@
             steps = 1;
         }
         previousDate = currentDate;
-        var sentence = `"STEP","${formatTime(previousDate)}","${step}"`;
-        log(sentence);
+        //var sentence = `"STEP","${formatTime(previousDate)}","${steps}"`;
+        console.log(JSON.stringify(f));
     });
 
     Bangle.on('GPS', function(f) {
@@ -277,6 +284,11 @@
        log(sentence);
     });
 
+    E.on('kill', ()=>{
+        var sentence = `"STEP","${formatTime(previousDate)}","${steps}"`;
+        log(sentence);
+    })
+
     function setGPSTime(){
         gpsPower = 1;
         Bangle.setGPSPower(gpsPower);
@@ -288,6 +300,9 @@
     }
 
     function log(sentence){
+        if(currentFile == null){
+            currentFile = s.open(fln, "a");
+        }
         currentFile.write(sentence + "\n");
     }
 
@@ -307,7 +322,7 @@
         showTime();
         setGPSTime();
         startHRMonitor();
-        currentFile = s.open(fln, "a");
+        
         setWatch(tHRM, BTN1, {repeat:true});
         setWatch(tGPS, BTN3, {repeat:true});
     }
