@@ -252,7 +252,7 @@
         }
         previousDate = currentDate;
         //var sentence = `"STEP","${formatTime(previousDate)}","${steps}"`;
-        console.log(JSON.stringify(f));
+        //console.log(JSON.stringify(f));
     });
 
     Bangle.on('GPS', function(f) {
