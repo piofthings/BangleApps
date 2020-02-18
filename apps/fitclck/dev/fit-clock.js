@@ -237,7 +237,6 @@
     Bangle.on('lcdPower', function(on) {
         if (on) {
             showTime();
-            drawWidgets();
             var sentence = `"STEP","${formatTime(previousDate)}","${steps}"`;
             log(sentence);
         }
@@ -325,6 +324,8 @@
         
         setWatch(tHRM, BTN1, {repeat:true});
         setWatch(tGPS, BTN3, {repeat:true});
+        Bangle.loadWidgets();
+        Bangle.drawWidgets();
     }
     ctor();
 
