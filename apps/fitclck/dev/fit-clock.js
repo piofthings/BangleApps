@@ -189,7 +189,6 @@
             buf.drawString("GPS ON" , buf.getWidth() / 2, y + 8 + 32);
             if(fix != null && fix.satellites > 0){
                 buf.setFont("6x8");
-                buf.setFontVector(8);
                 buf.setFontAlign(0, -1);
                 buf.drawString(fix.satellites + " satellites" , buf.getWidth() / 2, y + 8 + 48);
             }
@@ -251,14 +250,8 @@
             steps = 1;
         }
         previousDate = currentDate;
-        //var sentence = `"STEP","${formatTime(previousDate)}","${steps}"`;
-        //console.log(JSON.stringify(f));
-    });
-
-    Bangle.on('accel', function(acc) {
-        // acc = {x,y,z,diff,mag}
+        var acc = Bangle.getAccel();
         var sentence = `"ACCL","${formatTime(new Date())}","${acc.x}","${acc.y}","${acc.z}","${acc.diff}","${acc.mag}"`;
-        log(sentence);
     });
 
     Bangle.on('GPS', function(f) {
