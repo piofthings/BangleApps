@@ -237,8 +237,8 @@
     Bangle.on('lcdPower', function(on) {
         if (on) {
             showTime();
-            var sentence = `"STEP","${formatTime(previousDate)}","${steps}"`;
-            log(sentence);
+            //var sentence = `"STEP","${formatTime(previousDate)}","${steps}"`;
+            //log(sentence);
         }
     });
 
@@ -253,6 +253,12 @@
         previousDate = currentDate;
         //var sentence = `"STEP","${formatTime(previousDate)}","${steps}"`;
         //console.log(JSON.stringify(f));
+    });
+
+    Bangle.on('accel', function(acc) {
+        // acc = {x,y,z,diff,mag}
+        var sentence = `"ACCL","${formatTime(new Date())}","${acc.x}","${acc.y}","${acc.z}","${acc.diff}","${acc.mag}"`;
+        log(sentence);
     });
 
     Bangle.on('GPS', function(f) {
@@ -279,14 +285,14 @@
 
     Bangle.on('HRM',function(hrm) {
        lhr = "BPM: " + hrm.bpm;
-       var sentence = "HRM," + formatTime(new Date()) + "," + hrm.bpm + "," + hrm.confidence;
+       var sentence = `"HRM","${formatTime(new Date())}","{hrm.bpm}","{hrm.confidence}"`;
        log(sentence);
     });
 
-    E.on('kill', ()=>{
-        var sentence = `"STEP","${formatTime(previousDate)}","${steps}"`;
-        log(sentence);
-    })
+    // E.on('kill', ()=>{
+    //     //var sentence = `"STEP","${formatTime(previousDate)}","${steps}"`;
+    //     //log(sentence);
+    // })
 
     function setGPSTime(){
         gpsPower = 1;
