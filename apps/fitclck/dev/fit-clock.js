@@ -150,8 +150,9 @@
             if (lastCh !== undefined &&
                 (thisCh - 1 == lastCh ||
                     (thisCh == 0 && lastCh == 5) ||
-                    (thisCh == 0 && lastCh == 9)))
+                    (thisCh == 0 && lastCh == 9))){
                 ch = lastCh;
+            }
             else {
                 ch = thisCh;
                 chn = 0;
@@ -177,26 +178,26 @@
         buf.drawString(date, buf.getWidth() / 2, y + 8);
         // BPM
         if(hrmPower == 1){
-                buf.setFont("6x8");
-                buf.setFontVector(12);
-                buf.setFontAlign(0, -1);
-                buf.drawString(lhr, buf.getWidth() / 2, y + 8 + 16);
+            buf.setFont("6x8");
+            buf.setFontVector(12);
+            buf.setFontAlign(0, -1);
+            buf.drawString(lhr, buf.getWidth() / 2, y + 24);
         }
         if(gpsPower == 1){
             buf.setFont("6x8");
             buf.setFontVector(12);
             buf.setFontAlign(0, -1);
-            buf.drawString("GPS ON" , buf.getWidth() / 2, y + 8 + 32);
+            buf.drawString("GPS ON" , buf.getWidth() / 2, y + 40);
             if(fix != null && fix.satellites > 0){
                 buf.setFont("6x8");
                 buf.setFontAlign(0, -1);
-                buf.drawString(fix.satellites + " satellites" , buf.getWidth() / 2, y + 8 + 48);
+                buf.drawString(fix.satellites + " satellites" , buf.getWidth() / 2, y + 56);
             }
         }
         if(steps > 0){
             buf.setFont("6x8");
             buf.setFontAlign(0, -1);
-            buf.drawString("Steps " + steps, buf.getWidth() / 2, y + 8 + 64);
+            buf.drawString("Steps " + steps, buf.getWidth() / 2, y + 64);
         }
         flip();
     }
@@ -278,7 +279,7 @@
 
     Bangle.on('HRM',function(hrm) {
        lhr = "BPM: " + hrm.bpm;
-       var sentence = `"HRM","${formatTime(new Date())}","{hrm.bpm}","{hrm.confidence}"`;
+       var sentence = `"HRM","${formatTime(new Date())}","${hrm.bpm}","${hrm.confidence}"`;
        log(sentence);
     });
 
