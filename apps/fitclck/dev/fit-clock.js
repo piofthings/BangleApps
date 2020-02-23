@@ -302,6 +302,7 @@
 
     function log(sentence){
         if(currentFile == null){
+            console.log("Trying to create new file" + fln);
             currentFile = s.open(fln, "a");
         }
         currentFile.write(sentence + "\n");
