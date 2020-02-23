@@ -237,6 +237,7 @@
     Bangle.on('lcdPower', function(on) {
         if (on) {
             showTime();
+            Bangle.drawWidgets();
             //var sentence = `"STEP","${formatTime(previousDate)}","${steps}"`;
             //log(sentence);
         }
@@ -253,6 +254,7 @@
         previousDate = currentDate;
         var acc = Bangle.getAccel();
         var sentence = `"ACCL","${formatTime(new Date())}","${acc.x}","${acc.y}","${acc.z}","${acc.diff}","${acc.mag}"`;
+        log(sentence);
     });
 
     Bangle.on('GPS', function(f) {
