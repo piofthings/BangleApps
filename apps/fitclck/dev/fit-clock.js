@@ -1,5 +1,6 @@
 (function() {
     var s = require("Storage");
+    const FITCLOCKSETTINGS = "@fitclck";
     var fln = "ftclog";
     var currentFile = null;
     var hrmPower = 0;
@@ -285,10 +286,13 @@
        log(sentence);
     });
 
-    // E.on('kill', ()=>{
-    //     //var sentence = `"STEP","${formatTime(previousDate)}","${steps}"`;
-    //     //log(sentence);
-    // })
+    E.on('kill', () => {
+        let d = {
+          lastUpdate : previousDate.toISOString(),
+          stepsToday : steps
+        };
+        require("Storage").write(FITCLOCKSETTINGS,d);
+    });
 
     function setGPSTime(){
         gpsPower = 1;
@@ -318,8 +322,18 @@
         Bangle.setGPSPower(gpsPower);
     }
 
+    function loadSettings(){
+        let fitClockSettings = require("Storage").readJSON(FITCLOCKSETTINGS);
+        if (fitClockSettings) {
+            if (fitClockSettings.lastUpdate)
+                previousDate = new Date(fitClockSettings.lastUpdate);
+            steps = fitClockSettings.stepsToday|0;
+        }
+    }
+
     function ctor() {
         g.clear();
+        loadSettings();
         setInterval(showTime, 1000);
         showTime();
         setGPSTime();
