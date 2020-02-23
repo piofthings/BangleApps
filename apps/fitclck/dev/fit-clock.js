@@ -317,7 +317,7 @@
         Bangle.setGPSPower(gpsPower);
     }
 
-    function ctor() {
+    ctor = () => {
         g.clear();
         setInterval(showTime, 1000);
         showTime();
