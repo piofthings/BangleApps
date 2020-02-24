@@ -2,7 +2,6 @@
     var s = require("Storage");
     const FITCLOCKSETTINGS = "@fitclck";
     var fln = "ftclog";
-    var currentFile = null;
     var hrmPower = 0;
     var gpsPower = 0;
     var fix = null;
@@ -305,11 +304,18 @@
     }
 
     function log(sentence){
-        if(currentFile == null){
+        if(Bangle.AppLog.currentFile == null){
             console.log("Trying to create new file" + fln);
-            currentFile = s.open(fln, "a");
+            Bangle.AppLog.init();
         }
-        currentFile.write(sentence + "\n");
+        try{
+            Bangle.AppLog.write(sentence);
+        }
+        catch(ex){
+            if(ex.message.startWith("Unable to find or create")){
+                Bangle.AppLog.init(fln);
+            }
+        }
     }
 
     function tHRM(){
@@ -332,6 +338,30 @@
     }
 
     function ctor() {
+        Bangle.AppLog = {
+            currentFile: null,
+            lock: false,
+            init: (filename) => {
+                try{
+                    Bangle.AppLog.currentFile = s.open(filename, "a");
+                }
+                catch(ex){
+                    console.log("Failed to create file", ex);
+                }
+            },
+            write : (sentence) => {
+                if(Bangle.AppLog.lock != true){
+                    Bangle.AppLog.currentFile.write(sentence + "\n");                    
+                }
+            },
+            clearLog: () => {
+                Bangle.AppLog.lock = true;
+                Bangle.AppLog.currentFile = null;
+                require("Storage").open("ftclog", "w").erase();
+                Bangle.AppLog.lock = false;
+                load();
+            }
+        };
         g.clear();
         loadSettings();
         setInterval(showTime, 1000);
