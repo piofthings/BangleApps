@@ -306,7 +306,7 @@
     function log(sentence){
         if(Bangle.AppLog.currentFile == null){
             console.log("Trying to create new file" + fln);
-            Bangle.AppLog.init();
+            Bangle.AppLog.init(fln);
         }
         try{
             Bangle.AppLog.write(sentence);
@@ -343,7 +343,12 @@
             lock: false,
             init: (filename) => {
                 try{
-                    Bangle.AppLog.currentFile = s.open(filename, "a");
+                    if(filename != null && filename != ''){
+                        Bangle.AppLog.currentFile = s.open(filename, "a");
+                    }
+                    else{
+                        console.error("Log file name not provided");
+                    }
                 }
                 catch(ex){
                     console.log("Failed to create file", ex);
