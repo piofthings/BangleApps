@@ -313,9 +313,6 @@
         }
         catch(ex){
             console.log(ex);
-            if(ex.message.startsWith("Unable to find or create")){
-                Bangle.AppLog.init(fln);
-            }
         }
     }
 
@@ -342,7 +339,11 @@
         Bangle.AppLog = {
             currentFile: null,
             lock: false,
+            shardCount: 0,
+            currentFileName: "",
+            error: false,
             init: (filename) => {
+                Bangle.AppLog.currentFileName = filename;
                 try{
                     if(filename != null && filename != ''){
                         Bangle.AppLog.currentFile = s.open(filename, "a");
@@ -356,18 +357,27 @@
                 }
             },
             write : (sentence) => {
-                if(Bangle.AppLog.lock != true){
-                    Bangle.AppLog.currentFile.write(sentence + "\n");                    
+                if(Bangle.AppLog.lock != true &&
+                    Bangle.AppLog.error != true){
+                    try{
+                        Bangle.AppLog.currentFile.write(sentence + "\n");   
+                    }   
+                    catch (ex){
+                        Bangle.AppLog.currentFile = null;
+                        Bangle.AppLog.error = true;
+                    }              
                 }
             },
             clearLog: () => {
                 Bangle.AppLog.lock = true;
                 Bangle.AppLog.currentFile = null;
-                require("Storage").open("ftclog", "w").erase();
+                require("Storage").open(Bangle.AppLog.currentFileName, "w").erase();
                 Bangle.AppLog.lock = false;
+                Bangle.AppLog.error = false;
                 load();
             }
         };
+        Bangle.AppLog.error = false;
         g.clear();
         loadSettings();
         setInterval(showTime, 1000);
