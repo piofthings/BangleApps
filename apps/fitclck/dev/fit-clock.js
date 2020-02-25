@@ -312,7 +312,8 @@
             Bangle.AppLog.write(sentence);
         }
         catch(ex){
-            if(ex.message.startWith("Unable to find or create")){
+            console.log(ex);
+            if(ex.message.startsWith("Unable to find or create")){
                 Bangle.AppLog.init(fln);
             }
         }
