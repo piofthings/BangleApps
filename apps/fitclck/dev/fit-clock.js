@@ -363,6 +363,7 @@
                         Bangle.AppLog.currentFile.write(sentence + "\n");   
                     }   
                     catch (ex){
+                        console.log(ex);
                         Bangle.AppLog.currentFile = null;
                         Bangle.AppLog.error = true;
                     }              
