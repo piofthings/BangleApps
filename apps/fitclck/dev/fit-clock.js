@@ -360,7 +360,11 @@
                 if(Bangle.AppLog.lock != true &&
                     Bangle.AppLog.error != true){
                     try{
-                        Bangle.AppLog.currentFile.write(sentence + "\n");   
+                        var free = require("Storage").getFree();
+                        sentence = sentence +  + "\n";
+                        if(free > sentence.length){
+                            Bangle.AppLog.currentFile.write(sentence);   
+                        }
                     }   
                     catch (ex){
                         console.log(ex);
