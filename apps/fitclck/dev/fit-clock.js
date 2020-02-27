@@ -199,6 +199,18 @@
             buf.setFontAlign(0, -1);
             buf.drawString("Steps " + steps, buf.getWidth() / 2, y + 64);
         }
+        if(Bangle.AppLog.error){
+            buf.setFont("6x8");
+            buf.setFontVector(12);
+            buf.setFontAlign(0, -1);
+            buf.drawString("ERROR" , buf.getWidth() / 2, y + 80);
+        }
+        if(Bangle.AppLog.diskFull){
+            buf.setFont("6x8");
+            buf.setFontVector(12);
+            buf.setFontAlign(0, -1);
+            buf.drawString("DISK FULL" , buf.getWidth() / 2, y + 96);
+        }
         flip();
     }
 
@@ -253,7 +265,7 @@
         }
         previousDate = currentDate;
         var acc = Bangle.getAccel();
-        var sentence = `"ACCL","${formatTime(new Date())}","${acc.x}","${acc.y}","${acc.z}","${acc.diff}","${acc.mag}"`;
+        var sentence = `A,"${formatTime(new Date())}",${acc.x},${acc.y},${acc.z},${acc.diff},${acc.mag}`;
         log(sentence);
     });
 
@@ -262,7 +274,7 @@
         if(fix.satellites > 0 && fixMissedCount < fixMissedTimeout){
             fixMissedCount = 0;
             setTime(fix.time.getTime() / 1000);
-            var sentence = `"GPS","${formatTime(new Date())}","${fix.satellites}","${fix.lat}","${fix.lon}","${fix.alt}","${fix.speed}","${fix.course}","${fix.time.ms}"`;
+            var sentence = `G,"${formatTime(new Date())}",${fix.satellites},${fix.lat},${fix.lon},${fix.alt},${fix.speed},${fix.course},${fix.time.ms}`;
             log(sentence);
         }
         else{
@@ -281,14 +293,16 @@
 
     Bangle.on('HRM',function(hrm) {
        lhr = "BPM: " + hrm.bpm;
-       var sentence = `"HRM","${formatTime(new Date())}","${hrm.bpm}","${hrm.confidence}"`;
+       var sentence = `H,"${formatTime(new Date())}",${hrm.bpm},${hrm.confidence}`;
        log(sentence);
     });
 
     E.on('kill', () => {
         let d = {
           lastUpdate : previousDate.toISOString(),
-          stepsToday : steps
+          stepsToday : steps,
+          logError: Bangle.AppLog.error,
+          logFull: Bangle.AppLog.diskFull
         };
         require("Storage").write(FITCLOCKSETTINGS,d);
     });
@@ -342,6 +356,7 @@
             shardCount: 0,
             currentFileName: "",
             error: false,
+            diskFull: false,
             init: (filename) => {
                 Bangle.AppLog.currentFileName = filename;
                 try{
@@ -364,6 +379,9 @@
                         sentence = sentence +  + "\n";
                         if(free > sentence.length){
                             Bangle.AppLog.currentFile.write(sentence);   
+                        }
+                        else{
+                            Bangle.AppLog.diskFull = true;
                         }
                     }   
                     catch (ex){
