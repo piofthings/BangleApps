@@ -3,9 +3,10 @@
   "id": "boot",
   "name": "Bootloader",
   "icon": "bootloader.png",
-  "version": "0.06",
+  "version": "0.07",
   "description": "This is needed by Bangle.js to automatically load the clock, menu, widgets and settings",
   "tags": "tool,system",
+  "type": "bootloader",
   "storage": [
    {
     "name": ".boot0",
@@ -14,10 +15,6 @@
    {
     "name": ".bootcde",
     "url": "bootloader.js"
-   },
-   {
-    "name": "+boot",
-    "url": "bootloader.json"
    }
   ],
   "sortorder": -10
@@ -25,17 +22,15 @@
  {
   "id": "launch",
   "name": "Default Launcher",
+  "shortName": "Launcher",
   "icon": "app.png",
   "version": "0.01",
   "description": "This is needed by Bangle.js to display a menu allowing you to choose your own applications. You can replace this with a customised launcher.",
   "tags": "tool,system,launcher",
+  "type": "launch",
   "storage": [
    {
-    "name": "+launch",
-    "url": "app.json"
-   },
-   {
-    "name": "-launch",
+    "name": "launch.app.js",
     "url": "app.js"
    }
   ],
@@ -51,15 +46,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+about",
-    "url": "app.json"
-   },
-   {
-    "name": "-about",
+    "name": "about.app.js",
     "url": "app.js"
    },
    {
-    "name": "*about",
+    "name": "about.img",
     "url": "app-icon.js",
     "evaluate": true
    }
@@ -71,19 +62,19 @@
   "icon": "app.png",
   "version": "0.03",
   "description": "Appears at first boot and explains how to use Bangle.js",
-  "tags": "welcome",
+  "tags": "start,welcome",
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+welcome",
-    "url": "app.json"
+    "name": "welcome.js",
+    "url": "welcome.js"
    },
    {
-    "name": "-welcome",
+    "name": "welcome.app.js",
     "url": "app.js"
    },
    {
-    "name": "*welcome",
+    "name": "welcome.img",
     "url": "app-icon.js",
     "evaluate": true
    }
@@ -98,20 +89,16 @@
   "tags": "tool,system,android,widget",
   "storage": [
    {
-    "name": "+gbridge",
-    "url": "app.json"
-   },
-   {
-    "name": "-gbridge",
+    "name": "gbridge.app.js",
     "url": "app.js"
    },
    {
-    "name": "*gbridge",
+    "name": "gbridge.img",
     "url": "app-icon.js",
     "evaluate": true
    },
    {
-    "name": "=gbridge",
+    "name": "gbridge.wid.js",
     "url": "widget.js"
    }
   ]
@@ -127,15 +114,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+mclock",
-    "url": "clock-morphing.json"
-   },
-   {
-    "name": "-mclock",
+    "name": "mclock.app.js",
     "url": "clock-morphing.js"
    },
    {
-    "name": "*mclock",
+    "name": "mclock.img",
     "url": "clock-morphing-icon.js",
     "evaluate": true
    }
@@ -146,25 +129,21 @@
   "id": "setting",
   "name": "Settings",
   "icon": "settings.png",
-  "version": "0.04",
+  "version": "0.05",
   "description": "A menu for setting up Bangle.js",
   "tags": "tool,system",
   "storage": [
    {
-    "name": "+setting",
-    "url": "settings.json"
-   },
-   {
-    "name": "-setting",
+    "name": "setting.app.js",
     "url": "settings.js"
    },
    {
-    "name": "@setting",
+    "name": "setting.json",
     "url": "settings-default.json",
     "evaluate": true
    },
    {
-    "name": "*setting",
+    "name": "setting.img",
     "url": "settings-icon.js",
     "evaluate": true
    }
@@ -174,30 +153,31 @@
  {
   "id": "alarm",
   "name": "Default Alarm",
+  "shortName": "Alarms",
   "icon": "app.png",
-  "version": "0.01",
+  "version": "0.02",
   "description": "Set and respond to alarms",
   "tags": "tool,alarm,widget",
   "storage": [
    {
-    "name": "+alarm",
-    "url": "app.json"
-   },
-   {
-    "name": "-alarm",
+    "name": "alarm.app.js",
     "url": "app.js"
    },
    {
-    "name": "@alarm",
+    "name": "alarm.js",
+    "url": "alarm.js"
+   },
+   {
+    "name": "alarm.json",
     "content": "[]"
    },
    {
-    "name": "*alarm",
+    "name": "alarm.img",
     "url": "app-icon.js",
     "evaluate": true
    },
    {
-    "name": "=alarm",
+    "name": "alarm.wid.js",
     "url": "widget.js"
    }
   ]
@@ -213,15 +193,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+wclock",
-    "url": "clock-word.json"
-   },
-   {
-    "name": "-wclock",
+    "name": "wclock.app.js",
     "url": "clock-word.js"
    },
    {
-    "name": "*wclock",
+    "name": "wclock.img",
     "url": "clock-word-icon.js",
     "evaluate": true
    }
@@ -238,15 +214,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+aclock",
-    "url": "clock-analog.json"
-   },
-   {
-    "name": "-aclock",
+    "name": "aclock.app.js",
     "url": "clock-analog.js"
    },
    {
-    "name": "*aclock",
+    "name": "aclock.img",
     "url": "clock-analog-icon.js",
     "evaluate": true
    }
@@ -262,15 +234,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+clck3x2",
-    "url": "clock3x2.json"
-   },
-   {
-    "name": "-clck3x2",
+    "name": "clck3x2.app.js",
     "url": "clock3x2.js"
    },
    {
-    "name": "*clck3x2",
+    "name": "clck3x2.img",
     "url": "clock3x2-icon.js",
     "evaluate": true
    }
@@ -286,15 +254,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+trex",
-    "url": "trex.json"
-   },
-   {
-    "name": "-trex",
+    "name": "trex.app.js",
     "url": "trex.js"
    },
    {
-    "name": "*trex",
+    "name": "trex.img",
     "url": "trex-icon.js",
     "evaluate": true
    }
@@ -310,15 +274,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+astroid",
-    "url": "asteroids.json"
-   },
-   {
-    "name": "-astroid",
+    "name": "astroid.app.js",
     "url": "asteroids.js"
    },
    {
-    "name": "*astroid",
+    "name": "astroid.img",
     "url": "asteroids-icon.js",
     "evaluate": true
    }
@@ -333,15 +293,11 @@
   "tags": "game",
   "storage": [
    {
-    "name": "+clickms",
-    "url": "click-master.json"
-   },
-   {
-    "name": "-clickms",
+    "name": "clickms.app.js",
     "url": "click-master.js"
    },
    {
-    "name": "*clickms",
+    "name": "clickms.img",
     "url": "click-master-icon.js",
     "evaluate": true
    }
@@ -356,15 +312,11 @@
   "tags": "game",
   "storage": [
    {
-    "name": "+horsey",
-    "url": "horse-race.json"
-   },
-   {
-    "name": "-horsey",
+    "name": "horsey.app.js",
     "url": "horse-race.js"
    },
    {
-    "name": "*horsey",
+    "name": "horsey.img",
     "url": "horse-race-icon.js",
     "evaluate": true
    }
@@ -379,15 +331,11 @@
   "tags": "tool,outdoors",
   "storage": [
    {
-    "name": "+compass",
-    "url": "compass.json"
-   },
-   {
-    "name": "-compass",
+    "name": "compass.app.js",
     "url": "compass.js"
    },
    {
-    "name": "*compass",
+    "name": "compass.img",
     "url": "compass-icon.js",
     "evaluate": true
    }
@@ -402,15 +350,11 @@
   "tags": "tool,gps",
   "storage": [
    {
-    "name": "+gpstime",
-    "url": "gpstime.json"
-   },
-   {
-    "name": "-gpstime",
+    "name": "gpstime.app.js",
     "url": "gpstime.js"
    },
    {
-    "name": "*gpstime",
+    "name": "gpstime.img",
     "url": "gpstime-icon.js",
     "evaluate": true
    }
@@ -419,18 +363,19 @@
  {
   "id": "openloc",
   "name": "Open Location / Plus Codes",
-  "icon": "openlocation.png",
+  "shortName": "Open Location",
+  "icon": "app.png",
   "version": "0.01",
   "description": "Convert your current GPS location to a series of characters",
   "tags": "tool,outdoors,gps",
   "storage": [
    {
-    "name": "+openloc",
-    "url": "openlocation.json"
+    "name": "openloc.app.js",
+    "url": "app.js"
    },
    {
-    "name": "-openloc",
-    "url": "openlocation.js",
+    "name": "openloc.img",
+    "url": "app-icon.js",
     "evaluate": true
    }
   ]
@@ -444,15 +389,11 @@
   "tags": "tool,outdoors,gps",
   "storage": [
    {
-    "name": "+speedo",
-    "url": "speedo.json"
-   },
-   {
-    "name": "-speedo",
+    "name": "speedo.app.js",
     "url": "speedo.js"
    },
    {
-    "name": "*speedo",
+    "name": "speedo.img",
     "url": "speedo-icon.js",
     "evaluate": true
    }
@@ -468,25 +409,21 @@
   "tags": "tool,outdoors,gps,widget",
   "storage": [
    {
-    "name": "+gpsrec",
-    "url": "app.json"
-   },
-   {
-    "name": "-gpsrec",
+    "name": "gpsrec.app.js",
     "url": "app.js"
    },
    {
-    "name": "@gpsrec",
+    "name": "gpsrec.json",
     "url": "app-settings.json",
     "evaluate": true
    },
    {
-    "name": "*gpsrec",
+    "name": "gpsrec.img",
     "url": "app-icon.js",
     "evaluate": true
    },
    {
-    "name": "=gpsrec",
+    "name": "gpsrec.wid.js",
     "url": "widget.js"
    }
   ]
@@ -500,15 +437,11 @@
   "tags": "tool",
   "storage": [
    {
-    "name": "+slevel",
-    "url": "spiritlevel.json"
-   },
-   {
-    "name": "-slevel",
+    "name": "slevel.app.js",
     "url": "spiritlevel.js"
    },
    {
-    "name": "*slevel",
+    "name": "slevel.img",
     "url": "spiritlevel-icon.js",
     "evaluate": true
    }
@@ -523,55 +456,43 @@
   "tags": "tool,system",
   "storage": [
    {
-    "name": "+files",
-    "url": "files.json"
-   },
-   {
-    "name": "-files",
+    "name": "files.app.js",
     "url": "files.js"
    },
    {
-    "name": "*files",
+    "name": "files.img",
     "url": "files-icon.js",
     "evaluate": true
    }
   ]
  },
  {
-  "id": "sbat",
+  "id": "widbat",
   "name": "Battery Level Widget",
-  "icon": "widget-battery.png",
+  "icon": "widget.png",
   "version": "0.02",
   "description": "Show the current battery level and charging status in the top right of the clock",
   "tags": "widget,battery",
   "type": "widget",
   "storage": [
    {
-    "name": "+sbat",
-    "url": "widget-battery.json"
-   },
-   {
-    "name": "=sbat",
-    "url": "widget-battery.js"
+    "name": "widbat.wid.js",
+    "url": "widget.js"
    }
   ]
  },
  {
-  "id": "sbt",
+  "id": "widbt",
   "name": "Bluetooth Widget",
-  "icon": "widget-bluetooth.png",
+  "icon": "widget.png",
   "version": "0.01",
   "description": "Show the current Bluetooth connection status in the top right of the clock",
   "tags": "widget,bluetooth",
   "type": "widget",
   "storage": [
    {
-    "name": "+sbt",
-    "url": "widget-bluetooth.json"
-   },
-   {
-    "name": "=sbt",
-    "url": "widget-bluetooth.js"
+    "name": "widbt.wid.js",
+    "url": "widget.js"
    }
   ]
  },
@@ -584,34 +505,27 @@
   "tags": "health",
   "storage": [
    {
-    "name": "+hrm",
-    "url": "heartrate.json"
-   },
-   {
-    "name": "-hrm",
+    "name": "hrm.app.js",
     "url": "heartrate.js"
    },
    {
-    "name": "*hrm",
+    "name": "hrm.img",
     "url": "heartrate-icon.js",
     "evaluate": true
    }
   ]
  },
  {
-  "id": "whrm",
+  "id": "widhrm",
   "name": "Simple Heart Rate widget",
   "icon": "widget.png",
   "version": "0.01",
   "description": "When the screen is on, the widget turns on the heart rate monitor and displays the current heart rate (or last known in grey). For this to work well you'll need at least a 15 second LCD Timeout.",
   "tags": "health,widget",
+  "type": "widget",
   "storage": [
    {
-    "name": "+whrm",
-    "url": "widget.json"
-   },
-   {
-    "name": "=whrm",
+    "name": "widhrm.wid.js",
     "url": "widget.js"
    }
   ]
@@ -625,15 +539,11 @@
   "tags": "health",
   "storage": [
    {
-    "name": "+stetho",
-    "url": "stetho.json"
-   },
-   {
-    "name": "-stetho",
+    "name": "stetho.app.js",
     "url": "stetho.js"
    },
    {
-    "name": "*stetho",
+    "name": "stetho.img",
     "url": "stetho-icon.js",
     "evaluate": true
    }
@@ -649,15 +559,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+swatch",
-    "url": "stopwatch.json"
-   },
-   {
-    "name": "-swatch",
+    "name": "swatch.app.js",
     "url": "stopwatch.js"
    },
    {
-    "name": "*swatch",
+    "name": "swatch.img",
     "url": "stopwatch-icon.js",
     "evaluate": true
    }
@@ -666,21 +572,18 @@
  {
   "id": "hidmsic",
   "name": "Bluetooth Music Controls",
+  "shortName": "Music Control",
   "icon": "hid-music.png",
   "version": "0.01",
   "description": "Enable HID in settings, pair with your phone, then use this app to control music from your watch!",
   "tags": "bluetooth",
   "storage": [
    {
-    "name": "+hidmsic",
-    "url": "hid-music.json"
-   },
-   {
-    "name": "-hidmsic",
+    "name": "hidmsic.app.js",
     "url": "hid-music.js"
    },
    {
-    "name": "*hidmsic",
+    "name": "hidmsic.img",
     "url": "hid-music-icon.js",
     "evaluate": true
    }
@@ -689,21 +592,18 @@
  {
   "id": "hidkbd",
   "name": "Bluetooth Keyboard",
+  "shortName": "Bluetooth Kbd",
   "icon": "hid-keyboard.png",
   "version": "0.01",
   "description": "Enable HID in settings, pair with your phone/PC, then use this app to control other apps",
   "tags": "bluetooth",
   "storage": [
    {
-    "name": "+hidkbd",
-    "url": "hid-keyboard.json"
-   },
-   {
-    "name": "-hidkbd",
+    "name": "hidkbd.app.js",
     "url": "hid-keyboard.js"
    },
    {
-    "name": "*hidkbd",
+    "name": "hidkbd.img",
     "url": "hid-keyboard-icon.js",
     "evaluate": true
    }
@@ -712,21 +612,18 @@
  {
   "id": "hidbkbd",
   "name": "Binary Bluetooth Keyboard",
+  "shortName": "Binary BT Kbd",
   "icon": "hid-binary-keyboard.png",
   "version": "0.01",
   "description": "Enable HID in settings, pair with your phone/PC, then type messages using the onscreen keyboard by tapping repeatedly on the key you want",
   "tags": "bluetooth",
   "storage": [
    {
-    "name": "+hidbkbd",
-    "url": "hid-binary-keyboard.json"
-   },
-   {
-    "name": "-hidbkbd",
+    "name": "hidbkbd.app.js",
     "url": "hid-binary-keyboard.js"
    },
    {
-    "name": "*hidbkbd",
+    "name": "hidbkbd.img",
     "url": "hid-binary-keyboard-icon.js",
     "evaluate": true
    }
@@ -741,55 +638,51 @@
   "tags": "game",
   "storage": [
    {
-    "name": "+animals",
-    "url": "animals.json"
-   },
-   {
-    "name": "-animals",
+    "name": "animals.app.js",
     "url": "animals.js"
    },
    {
-    "name": "*animals",
+    "name": "animals.img",
     "url": "animals-icon.js",
     "evaluate": true
    },
    {
-    "name": "*snake",
+    "name": "animals-snake.img",
     "url": "animals-snake.js",
     "evaluate": true
    },
    {
-    "name": "*duck",
+    "name": "animals-duck.img",
     "url": "animals-duck.js",
     "evaluate": true
    },
    {
-    "name": "*swan",
+    "name": "animals-swan.img",
     "url": "animals-swan.js",
     "evaluate": true
    },
    {
-    "name": "*fox",
+    "name": "animals-fox.img",
     "url": "animals-fox.js",
     "evaluate": true
    },
    {
-    "name": "*camel",
+    "name": "animals-camel.img",
     "url": "animals-camel.js",
     "evaluate": true
    },
    {
-    "name": "*pig",
+    "name": "animals-pig.img",
     "url": "animals-pig.js",
     "evaluate": true
    },
    {
-    "name": "*sheep",
+    "name": "animals-sheep.img",
     "url": "animals-sheep.js",
     "evaluate": true
    },
    {
-    "name": "*mouse",
+    "name": "animals-mouse.img",
     "url": "animals-mouse.js",
     "evaluate": true
    }
@@ -805,13 +698,10 @@
   "custom": "qrcode.html",
   "storage": [
    {
-    "name": "-qrcode"
+    "name": "qrcode.app.js"
    },
    {
-    "name": "+qrcode"
-   },
-   {
-    "name": "=qrcode"
+    "name": "qrcode.img"
    }
   ]
  },
@@ -825,13 +715,10 @@
   "custom": "beercompass.html",
   "storage": [
    {
-    "name": "-beer"
+    "name": "beer.app.js"
    },
    {
-    "name": "+beer"
-   },
-   {
-    "name": "=beer"
+    "name": "beer.img"
    }
   ]
  },
@@ -845,13 +732,10 @@
   "custom": "route.html",
   "storage": [
    {
-    "name": "-route"
+    "name": "route.app.js"
    },
    {
-    "name": "+route"
-   },
-   {
-    "name": "=route"
+    "name": "route.img"
    }
   ]
  },
@@ -861,43 +745,43 @@
   "icon": "start.png",
   "version": "0.02",
   "description": "NodeConfEU 2019 'First Start' Sequence",
-  "tags": "start",
+  "tags": "start,welcome",
   "storage": [
    {
-    "name": "+ncstart",
-    "url": "start.json"
+    "name": "welcome.js",
+    "url": "welcome.js"
    },
    {
-    "name": ".boot3",
+    "name": "ncstart.app.js",
     "url": "start.js"
    },
    {
-    "name": "*ncstart",
+    "name": "ncstart.img",
     "url": "start-icon.js",
     "evaluate": true
    },
    {
-    "name": "*bangle",
+    "name": "nc-bangle.img",
     "url": "start-bangle.js",
     "evaluate": true
    },
    {
-    "name": "*nceu",
+    "name": "nc-nceu.img",
     "url": "start-nceu.js",
     "evaluate": true
    },
    {
-    "name": "*nfr",
+    "name": "nc-nfr.img",
     "url": "start-nfr.js",
     "evaluate": true
    },
    {
-    "name": "*nodew",
+    "name": "nc-nodew.img",
     "url": "start-nodew.js",
     "evaluate": true
    },
    {
-    "name": "*tf",
+    "name": "nc-tf.img",
     "url": "start-tf.js",
     "evaluate": true
    }
@@ -912,36 +796,28 @@
   "tags": "health",
   "storage": [
    {
-    "name": "+ncfrun",
-    "url": "nceu-funrun.json"
-   },
-   {
-    "name": "-ncfrun",
+    "name": "ncfrun.app.js",
     "url": "nceu-funrun.js"
    },
    {
-    "name": "*ncfrun",
+    "name": "ncfrun.img",
     "url": "nceu-funrun-icon.js",
     "evaluate": true
    }
   ]
  },
  {
-  "id": "nceuwid",
+  "id": "widnceu",
   "name": "NCEU Logo Widget",
-  "icon": "nceu-widget.png",
+  "icon": "widget.png",
   "version": "0.01",
   "description": "Show the NodeConf EU logo in the top left",
   "tags": "widget",
   "type": "widget",
   "storage": [
    {
-    "name": "+nceuwid",
-    "url": "nceu-widget.json"
-   },
-   {
-    "name": "=nceuwid",
-    "url": "nceu-widget.js"
+    "name": "widnceu.wid.js",
+    "url": "widget.js"
    }
   ]
  },
@@ -956,15 +832,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+sclock",
-    "url": "clock-simple.json"
-   },
-   {
-    "name": "-sclock",
+    "name": "sclock.app.js",
     "url": "clock-simple.js"
    },
    {
-    "name": "*sclock",
+    "name": "sclock.img",
     "url": "clock-simple-icon.js",
     "evaluate": true
    }
@@ -980,11 +852,7 @@
   "type": "app",
   "storage": [
    {
-    "name": "+gesture",
-    "url": "gesture.json"
-   },
-   {
-    "name": "-gesture",
+    "name": "gesture.app.js",
     "url": "gesture.js"
    },
    {
@@ -998,7 +866,7 @@
     "evaluate": true
    },
    {
-    "name": "*gesture",
+    "name": "gesture.img",
     "url": "gesture-icon.js",
     "evaluate": true
    }
@@ -1015,15 +883,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+pparrot",
-    "url": "party-parrot.json"
-   },
-   {
-    "name": "-pparrot",
+    "name": "pparrot.app.js",
     "url": "party-parrot.js"
    },
    {
-    "name": "*pparrot",
+    "name": "pparrot.img",
     "url": "party-parrot-icon.js",
     "evaluate": true
    }
@@ -1040,15 +904,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+hrings",
-    "url": "hypno-rings.json"
-   },
-   {
-    "name": "-hrings",
+    "name": "hrings.app.js",
     "url": "hypno-rings.js"
    },
    {
-    "name": "*hrings",
+    "name": "hrings.img",
     "url": "hypno-rings-icon.js",
     "evaluate": true
    }
@@ -1064,15 +924,11 @@
   "type": "app",
   "storage": [
    {
-    "name": "+morse",
-    "url": "morse-code.json"
-   },
-   {
-    "name": "-morse",
+    "name": "morse.app.js",
     "url": "morse-code.js"
    },
    {
-    "name": "*morse",
+    "name": "morse.img",
     "url": "morse-code-icon.js",
     "evaluate": true
    }
@@ -1087,15 +943,11 @@
   "tags": "bluetooth",
   "storage": [
    {
-    "name": "+blescan",
-    "url": "blescan.json"
-   },
-   {
-    "name": "-blescan",
+    "name": "blescan.app.js",
     "url": "blescan.js"
    },
    {
-    "name": "*blescan",
+    "name": "blescan.img",
     "url": "blescan-icon.js",
     "evaluate": true
    }
@@ -1110,15 +962,11 @@
   "tags": "sound",
   "storage": [
    {
-    "name": "+mmonday",
-    "url": "manic-monday.json"
-   },
-   {
-    "name": "-mmonday",
+    "name": "mmonday.app.js",
     "url": "manic-monday.js"
    },
    {
-    "name": "*mmonday",
+    "name": "mmonday.img",
     "url": "manic-monday-icon.js",
     "evaluate": true
    }
@@ -1134,15 +982,11 @@
   "type": "app",
   "storage": [
    {
-    "name": "+jbells",
-    "url": "jbells.json"
-   },
-   {
-    "name": "-jbells",
+    "name": "jbells.app.js",
     "url": "jbells.js"
    },
    {
-    "name": "*jbells",
+    "name": "jbells.img",
     "url": "jbells-icon.js",
     "evaluate": true
    }
@@ -1159,15 +1003,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+scolor",
-    "url": "show-color.json"
-   },
-   {
-    "name": "-scolor",
+    "name": "scolor.app.js",
     "url": "show-color.js"
    },
    {
-    "name": "*scolor",
+    "name": "scolor.img",
     "url": "show-color-icon.js",
     "evaluate": true
    }
@@ -1184,15 +1024,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+miclock",
-    "url": "clock-mixed.json"
-   },
-   {
-    "name": "-miclock",
+    "name": "miclock.app.js",
     "url": "clock-mixed.js"
    },
    {
-    "name": "*miclock",
+    "name": "miclock.img",
     "url": "clock-mixed-icon.js",
     "evaluate": true
    }
@@ -1209,15 +1045,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+bclock",
-    "url": "clock-binary.json"
-   },
-   {
-    "name": "-bclock",
+    "name": "bclock.app.js",
     "url": "clock-binary.js"
    },
    {
-    "name": "*bclock",
+    "name": "bclock.img",
     "url": "clock-binary-icon.js",
     "evaluate": true
    }
@@ -1233,15 +1065,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+clotris",
-    "url": "clock-tris.json"
-   },
-   {
-    "name": "-clotris",
+    "name": "clotris.app.js",
     "url": "clock-tris.js"
    },
    {
-    "name": "*clotris",
+    "name": "clotris.img",
     "url": "clock-tris-icon.js",
     "evaluate": true
    },
@@ -1261,15 +1089,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+flappy",
-    "url": "app.json"
-   },
-   {
-    "name": "-flappy",
+    "name": "flappy.app.js",
     "url": "app.js"
    },
    {
-    "name": "*flappy",
+    "name": "flappy.img",
     "url": "app-icon.js",
     "evaluate": true
    }
@@ -1285,15 +1109,11 @@
   "type": "app",
   "storage": [
    {
-    "name": "+gpsinfo",
-    "url": "gps-info.json"
-   },
-   {
-    "name": "-gpsinfo",
+    "name": "gpsinfo.app.js",
     "url": "gps-info.js"
    },
    {
-    "name": "*gpsinfo",
+    "name": "gpsinfo.img",
     "url": "gps-info-icon.js",
     "evaluate": true
    }
@@ -1310,15 +1130,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+pomodo",
-    "url": "pomodoro.json"
-   },
-   {
-    "name": "-pomodo",
+    "name": "pomodo.app.js",
     "url": "pomodoro.js"
    },
    {
-    "name": "*pomodo",
+    "name": "pomodo.img",
     "url": "pomodoro-icon.js",
     "evaluate": true
    }
@@ -1327,6 +1143,7 @@
  {
   "id": "blobclk",
   "name": "Large Digit Blob Clock",
+  "shortName": "Blob Clock",
   "icon": "clock-blob.png",
   "version": "0.03",
   "description": "A clock with big digits",
@@ -1335,15 +1152,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+blobclk",
-    "url": "clock-blob.json"
-   },
-   {
-    "name": "-blobclk",
+    "name": "blobclk.app.js",
     "url": "clock-blob.js"
    },
    {
-    "name": "*blobclk",
+    "name": "blobclk.img",
     "url": "clock-blob-icon.js",
     "evaluate": true
    }
@@ -1360,55 +1173,43 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+boldclk",
-    "url": "bold_clock.json"
-   },
-   {
-    "name": "-boldclk",
+    "name": "boldclk.app.js",
     "url": "bold_clock.js"
    },
    {
-    "name": "*boldclk",
+    "name": "boldclk.img",
     "url": "bold_clock-icon.js",
     "evaluate": true
    }
   ]
  },
  {
-  "id": "wdclk",
+  "id": "widclk",
   "name": "Digital clock widget",
-  "icon": "digital_clock_widget.png",
+  "icon": "widget.png",
   "version": "0.01",
   "description": "A simple digital clock widget",
   "tags": "widget,clock",
   "type": "widget",
   "storage": [
    {
-    "name": "+wdclk",
-    "url": "digital_clock_widget.json"
-   },
-   {
-    "name": "=wdclk",
-    "url": "digital_clock_widget.js"
+    "name": "widclk.wid.js",
+    "url": "widget.js"
    }
   ]
  },
  {
-  "id": "wpedom",
+  "id": "widpedom",
   "name": "Pedometer widget",
-  "icon": "pedometer_widget.png",
+  "icon": "widget.png",
   "version": "0.06",
   "description": "Daily pedometer widget",
   "tags": "widget",
   "type": "widget",
   "storage": [
    {
-    "name": "+wpedom",
-    "url": "pedometer_widget.json"
-   },
-   {
-    "name": "=wpedom",
-    "url": "pedometer_widget.js"
+    "name": "widpedom.wid.js",
+    "url": "widget.js"
    }
   ]
  },
@@ -1423,15 +1224,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+berlinc",
-    "url": "berlin-clock.json"
-   },
-   {
-    "name": "-berlinc",
+    "name": "berlinc.app.js",
     "url": "berlin-clock.js"
    },
    {
-    "name": "*berlinc",
+    "name": "berlinc.img",
     "url": "berlin-clock-icon.js",
     "evaluate": true
    }
@@ -1448,15 +1245,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+ctrclk",
-    "url": "app.json"
-   },
-   {
-    "name": "-ctrclk",
+    "name": "ctrclk.app.js",
     "url": "app.js"
    },
    {
-    "name": "*ctrclk",
+    "name": "ctrclk.img",
     "url": "app-icon.js",
     "evaluate": true
    }
@@ -1473,15 +1266,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+demoapp",
-    "url": "app.json"
-   },
-   {
-    "name": "-demoapp",
+    "name": "demoapp.app.js",
     "url": "app.js"
    },
    {
-    "name": "*demoapp",
+    "name": "demoapp.img",
     "url": "app-icon.js",
     "evaluate": true
    }
@@ -1496,15 +1285,11 @@
   "tags": "",
   "storage": [
    {
-    "name": "+flagrse",
-    "url": "app.json"
-   },
-   {
-    "name": "-flagrse",
+    "name": "flagrse.app.js",
     "url": "app.js"
    },
    {
-    "name": "*flagrse",
+    "name": "flagrse.img",
     "url": "app-icon.js",
     "evaluate": true
    }
@@ -1521,15 +1306,11 @@
   "allow_emulator": true,
   "storage": [
    {
-    "name": "+pipboy",
-    "url": "app.json"
-   },
-   {
-    "name": "-pipboy",
+    "name": "pipboy.app.js",
     "url": "app.js"
    },
    {
-    "name": "*pipboy",
+    "name": "pipboy.img",
     "url": "app-icon.js",
     "evaluate": true
    }
@@ -1538,23 +1319,23 @@
  {
   "id": "fitclck",
   "name": "Fit Clock",
-  "icon": "fit-clock.png",
-  "version": "0.41",
+  "icon": "app.png",
+  "version": "0.42",
   "description": "Fit Clock tries to mimic functions of a fitness watch by providing clock, GPS, heart rate monitoring all bundled into a single app",
   "tags": "clock",
   "type": "clock",
   "storage": [
    {
-    "name": "+fitclck",
-    "url": "fit-clock.json"
+    "name": "fitclck.json",
+    "url": "app-settings.json"
    },
    {
-    "name": "-fitclck",
-    "url": "fit-clock.js"
+    "name": "fitclck.app.js",
+    "url": "app.js"
    },
    {
-    "name": "*fitclck",
-    "url": "fit-clock-icon.js",
+    "name": "fitclck.img",
+    "url": "app-icon.js",
     "evaluate": true
    }
   ]

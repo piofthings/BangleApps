@@ -1,5 +1,5 @@
 (() => {
-  const PEDOMFILE = "@wpedom";
+  const PEDOMFILE = "wpedom.json";
   // add the width
   // WIDGETPOS.tr is originally 208 without any widgets
   var xpos = WIDGETPOS.tl;
@@ -57,7 +57,7 @@
   // add your widget
   WIDGETS["wpedom"]={draw:draw};
   // Load data at startup
-  let pedomData = require("Storage").readJSON(PEDOMFILE);
+  let pedomData = require("Storage").readJSON(PEDOMFILE,1);
   if (pedomData) {
     if (pedomData.lastUpdate)
       lastUpdate = new Date(pedomData.lastUpdate);
