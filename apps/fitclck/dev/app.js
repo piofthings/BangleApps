@@ -323,7 +323,7 @@
             Bangle.AppLog.init(fln);
         }
         try{
-            Bangle.AppLog.write(sentence);
+            Bangle.AppLog.write(sentence + "\n");
         }
         catch(ex){
             console.log(ex);
