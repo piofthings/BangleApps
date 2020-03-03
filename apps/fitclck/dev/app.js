@@ -409,7 +409,7 @@
                 print("<!-- finished sync -->");
             }
         };
-        Bangle.FitClock.error = false;
+        Bangle.AppLog.error = false;
 
         Bangle.Helper = {
             size: () => {
