@@ -402,9 +402,14 @@
             beginSync: () => {
                 var f = require('Storage').open(Bangle.AppLog.currentFileName, 'r');
                 var line = '';
-                while (line.indexOf('\xFF') == -1){
+                while (line != null && line.indexOf('\xFF') == -1){
                     line = f.readLine();
-                    print(line);
+                    if(line != null){
+                        print(line);
+                    }
+                    else{
+                        break;
+                    }
                 }
                 print("<!-- finished sync -->");
             }
