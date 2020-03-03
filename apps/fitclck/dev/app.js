@@ -400,9 +400,9 @@
                 load();
             },
             beginSync: () => {
-                var f = require('Storage').open(Bangle.AppLog.currentFile, 'r');
+                var f = require('Storage').open(Bangle.AppLog.currentFileName, 'r');
                 var line = '';
-                while ((line != null && line != undefined) && (line.indexOf('\xFF') == -1)){
+                while (line.indexOf('\xFF') == -1){
                     line = f.readLine();
                     print(line);
                 }
@@ -412,10 +412,15 @@
         Bangle.AppLog.error = false;
 
         Bangle.Helper = {
-            size: () => {
-                var f = require("Storage").open(Bangle.AppLog.currentFile, 'r');
+            size: (fileName) => {
+                var f = require("Storage").open(fileName, 'r');
                 print(f.getLength());
-
+                f = null;
+            },
+            delete: (fileName) => {
+                var f = require("Storage").open(fileName, 'w');
+                f.erase();
+                f = null;
             }
         };
 
