@@ -1320,7 +1320,7 @@
   "id": "fitclck",
   "name": "Fit Clock",
   "icon": "app.png",
-  "version": "0.43",
+  "version": "0.44",
   "description": "Fit Clock tries to mimic functions of a fitness watch by providing clock, GPS, heart rate monitoring all bundled into a single app",
   "tags": "clock",
   "type": "clock",

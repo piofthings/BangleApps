@@ -191,25 +191,25 @@
             if(fix != null && fix.satellites > 0){
                 buf.setFont("6x8");
                 buf.setFontAlign(0, -1);
-                buf.drawString(fix.satellites + " satellites" , buf.getWidth() / 2, y + 56);
+                buf.drawString(fix.satellites + " satellites" , buf.getWidth() / 2, y + 64);
             }
         }
         if(steps > 0){
             buf.setFont("6x8");
             buf.setFontAlign(0, -1);
-            buf.drawString("Steps " + steps, buf.getWidth() / 2, y + 64);
+            buf.drawString("Steps " + steps, buf.getWidth() / 2, y + 80);
         }
         if(Bangle.AppLog.error){
             buf.setFont("6x8");
             buf.setFontVector(12);
             buf.setFontAlign(0, -1);
-            buf.drawString("ERROR" , buf.getWidth() / 2, y + 80);
+            buf.drawString("ERROR" , buf.getWidth() / 2, y + 96);
         }
         if(Bangle.AppLog.diskFull){
             buf.setFont("6x8");
             buf.setFontVector(12);
             buf.setFontAlign(0, -1);
-            buf.drawString("DISK FULL" , buf.getWidth() / 2, y + 96);
+            buf.drawString("DISK FULL" , buf.getWidth() / 2, y + 112);
         }
         flip();
     }
@@ -265,7 +265,7 @@
         }
         previousDate = currentDate;
         var acc = Bangle.getAccel();
-        var sentence = `A,"${formatTime(new Date())}",${acc.x},${acc.y},${acc.z},${acc.diff},${acc.mag}`;
+        var sentence = `A,"${(new Date()).toUTCString()}",${acc.x},${acc.y},${acc.z},${acc.diff},${acc.mag}`;
         log(sentence);
     });
 
@@ -274,7 +274,7 @@
         if(fix.satellites > 0 && fixMissedCount < fixMissedTimeout){
             fixMissedCount = 0;
             setTime(fix.time.getTime() / 1000);
-            var sentence = `G,"${formatTime(new Date())}",${fix.satellites},${fix.lat},${fix.lon},${fix.alt},${fix.speed},${fix.course},${fix.time.ms}`;
+            var sentence = `G,"${(new Date()).toUTCString()}",${fix.satellites},${fix.lat},${fix.lon},${fix.alt},${fix.speed},${fix.course},${fix.time.ms}`;
             log(sentence);
         }
         else{
@@ -293,7 +293,7 @@
 
     Bangle.on('HRM',function(hrm) {
        lhr = "BPM: " + hrm.bpm;
-       var sentence = `H,"${formatTime(new Date())}",${hrm.bpm},${hrm.confidence}`;
+       var sentence = `H,"${(new Date()).toUTCString()}",${hrm.bpm},${hrm.confidence}`;
        log(sentence);
     });
 
@@ -319,7 +319,7 @@
 
     function log(sentence){
         if(Bangle.AppLog.currentFile == null){
-            console.log("Trying to create new file" + fln);
+            console.log("Trying to create new file:" + fln);
             Bangle.AppLog.init(fln);
         }
         try{
@@ -376,7 +376,7 @@
                     Bangle.AppLog.error != true){
                     try{
                         var free = require("Storage").getFree();
-                        sentence = sentence +  + "\n";
+                        sentence = sentence + "\n";
                         if(free > sentence.length){
                             Bangle.AppLog.currentFile.write(sentence);   
                         }
@@ -398,9 +398,27 @@
                 Bangle.AppLog.lock = false;
                 Bangle.AppLog.error = false;
                 load();
+            },
+            beginSync: () => {
+                var f = require('Storage').open(Bangle.AppLog.currentFile, 'r');
+                var line = '';
+                while ((line != null && line != undefined) && (line.indexOf('\xFF') == -1)){
+                    line = f.readLine();
+                    print(line);
+                }
+                print("<!-- finished sync -->");
             }
         };
-        Bangle.AppLog.error = false;
+        Bangle.FitClock.error = false;
+
+        Bangle.Helper = {
+            size: () => {
+                var f = require("Storage").open(Bangle.AppLog.currentFile, 'r');
+                print(f.getLength());
+
+            }
+        };
+
         g.clear();
         loadSettings();
         setInterval(showTime, 1000);
