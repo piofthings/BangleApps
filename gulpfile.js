@@ -3,7 +3,7 @@ var { src, dest, parallel, series } = require('gulp');
 var terser = require("gulp-terser");
 
 function minify() {
-  return src('apps/fitclck/dev/app.js', { base: 'apps/fitclck/dev' })
+  return src('apps/fitclck/dev/fitclock.js', { base: 'apps/fitclck/dev' })
     .pipe(terser())
     .pipe(dest('apps/fitclck'));
 };

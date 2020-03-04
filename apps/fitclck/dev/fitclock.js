@@ -1,7 +1,7 @@
 (function() {
     var s = require("Storage");
-    const FITCLOCKSETTINGS = "@fitclck";
-    var fln = "ftclog";
+    const FITCLOCKSETTINGS = "fitclock-settings.json";
+    var fln = "fitclock.log";
     var hrmPower = 0;
     var gpsPower = 0;
     var fix = null;
@@ -330,12 +330,12 @@
         }
     }
 
-    function tHRM(){
-        hrmPower = hrmPower===0?1:0;
+    function toggleHRM(){
+        hrmPower = hrmPower===0 ? 1 : 0;
         Bangle.setHRMPower(hrmPower);
     }
 
-    function tGPS(){
+    function toggleGPS(){
         gpsPower = gpsPower===0?1:0;
         Bangle.setGPSPower(gpsPower);
     }
@@ -436,8 +436,8 @@
         setGPSTime();
         startHRMonitor();
         
-        setWatch(tHRM, BTN1, {repeat:true});
-        setWatch(tGPS, BTN3, {repeat:true});
+        setWatch(toggleHRM, BTN1, {repeat:true});
+        setWatch(toggleGPS, BTN3, {repeat:true});
         Bangle.loadWidgets();
         Bangle.drawWidgets();
     }
