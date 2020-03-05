@@ -1320,22 +1320,22 @@
   "id": "fitclck",
   "name": "Fit Clock",
   "icon": "app.png",
-  "version": "0.50",
+  "version": "0.51",
   "description": "Fit Clock is a fitness app that uses the Morph clock as watch face and logs GPS, heart rate and accelerometer readings",
   "tags": "clock",
   "type": "clock",
   "storage": [
    {
-    "name": "fitclock.app.js",
+    "name": "fitclck.app.js",
     "url": "fitclock.js"
    },
    {
-    "name": "fitclock.img",
+    "name": "fitclck.img",
     "url": "fitclock-icon.js",
     "evaluate": true
    },
    {
-    "name": "fitclock.json",
+    "name": "fitclck.json",
     "url": "fitclock-settings.json"
    }
   ]

@@ -1,5 +1,4 @@
 (function() {
-    var s = require("Storage");
     const FITCLOCKSETTINGS = "fitclock-settings.json";
     var fln = "fitclock.log";
     var hrmPower = 0;
@@ -361,7 +360,8 @@
                 Bangle.AppLog.currentFileName = filename;
                 try{
                     if(filename != null && filename != ''){
-                        Bangle.AppLog.currentFile = s.open(filename, "a");
+                        Bangle.AppLog.currentFile = require("Storage").open(filename, "a");
+                        console.log("File created: " + filename);
                     }
                     else{
                         console.error("Log file name not provided");
@@ -375,14 +375,7 @@
                 if(Bangle.AppLog.lock != true &&
                     Bangle.AppLog.error != true){
                     try{
-                        var free = require("Storage").getFree();
-                        sentence = sentence + "\n";
-                        if(free > sentence.length){
-                            Bangle.AppLog.currentFile.write(sentence);   
-                        }
-                        else{
-                            Bangle.AppLog.diskFull = true;
-                        }
+                        Bangle.AppLog.currentFile.write(sentence);   
                     }   
                     catch (ex){
                         console.log(ex);
@@ -397,7 +390,7 @@
                 require("Storage").open(Bangle.AppLog.currentFileName, "w").erase();
                 Bangle.AppLog.lock = false;
                 Bangle.AppLog.error = false;
-                load();
+                //load();
             },
             beginSync: () => {
                 var f = require('Storage').open(Bangle.AppLog.currentFileName, 'r');
@@ -412,6 +405,7 @@
                     }
                 }
                 print("<!-- finished sync -->");
+                f=null;
             }
         };
         Bangle.AppLog.error = false;
