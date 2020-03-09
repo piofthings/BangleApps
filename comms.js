@@ -4,26 +4,45 @@ Puck.debug=3;
 var Comms = {
 reset : () => new Promise((resolve,reject) => {
   Puck.write("\x03\x10reset();\n", (result) => {
-    if (result===null) return reject("");
+    if (result===null) return reject("Connection failed");
     setTimeout(resolve,500);
   });
 }),
 uploadApp : (app,skipReset) => {
   return AppInfo.getFiles(app, httpGet).then(fileContents => {
     return new Promise((resolve,reject) => {
-      fileContents = fileContents.map(storageFile=>storageFile.cmd).join("\n")+"\n";
-      console.log("uploadApp",fileContents);
+      console.log("uploadApp",fileContents.map(f=>f.name).join(", "));
+      // Upload each file one at a time
+      function doUploadFiles() {
+        // No files left - print 'reboot' message
+        if (fileContents.length==0) {
+          Puck.write(`\x10E.showMessage('Hold BTN3\\nto reload')\n`,(result) => {
+            if (result===null) return reject("");
+            resolve(app);
+          });
+          return;
+        }
+        var f = fileContents.shift();
+        console.log(`Upload ${f.name} => ${JSON.stringify(f.content)}`);
+        // Chould check CRC here if needed instead of returning 'OK'...
+        // E.CRC32(require("Storage").read(${JSON.stringify(app.name)}))
+        Puck.write(`\x10${f.cmd};Bluetooth.println("OK")\n`,(result) => {
+          if (!result || result.trim()!="OK") return reject("Unexpected response "+(result||""));
+          doUploadFiles();
+        }, true); // wait for a newline
+      }
+      // Start the upload
       function doUpload() {
-        Puck.write(`\x10E.showMessage('Uploading\\n${app.id}...')\n${fileContents}\x10E.showMessage('Hold BTN3\\nto reload')\n`,(result) => {
+        Puck.write(`\x10E.showMessage('Uploading\\n${app.id}...')\n`,(result) => {
           if (result===null) return reject("");
-          resolve(appJSON);
+          doUploadFiles();
         });
       }
       if (skipReset) {
         doUpload();
       } else {
         // reset to ensure we have enough memory to upload what we need to
-        Comms.reset().then(doUpload)
+        Comms.reset().then(doUpload, reject)
       }
     });
   });
@@ -41,7 +60,8 @@ getInstalledApps : () => {
   });
 },
 removeApp : app => { // expects an app structure
-  var cmds = app.storage.map(file=>{
+  var storage = [{name:app.id+".info"}].concat(app.storage);
+  var cmds = storage.map(file=>{
     return `\x10require("Storage").erase(${toJS(file.name)});\n`;
   }).join("");
   console.log("removeApp", cmds);
