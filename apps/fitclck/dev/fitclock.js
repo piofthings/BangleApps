@@ -237,6 +237,7 @@
             draw(l, t, n);
         }, 20);
         lastTime = t;
+        Bangle.drawWidgets();
     }
 
     function formatTime(now) {
@@ -388,6 +389,7 @@
                 Bangle.AppLog.lock = true;
                 Bangle.AppLog.currentFile = null;
                 require("Storage").open(Bangle.AppLog.currentFileName, "w").erase();
+                require("Storage").compact();
                 Bangle.AppLog.lock = false;
                 Bangle.AppLog.error = false;
                 //load();
@@ -420,6 +422,7 @@
                 var f = require("Storage").open(fileName, 'w');
                 f.erase();
                 f = null;
+                require("Storage").compact();
             }
         };
 
