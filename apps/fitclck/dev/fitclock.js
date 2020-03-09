@@ -237,7 +237,7 @@
             draw(l, t, n);
         }, 20);
         lastTime = t;
-        Bangle.drawWidgets();
+        //Bangle.drawWidgets();
     }
 
     function formatTime(now) {
@@ -249,7 +249,7 @@
     Bangle.on('lcdPower', function(on) {
         if (on) {
             showTime();
-            Bangle.drawWidgets();
+            //Bangle.drawWidgets();
             //var sentence = `"STEP","${formatTime(previousDate)}","${steps}"`;
             //log(sentence);
         }
@@ -433,10 +433,13 @@
         setGPSTime();
         startHRMonitor();
         
-        setWatch(toggleHRM, BTN1, {repeat:true});
-        setWatch(toggleGPS, BTN3, {repeat:true});
+
         Bangle.loadWidgets();
         Bangle.drawWidgets();
+
+        setWatch(toggleHRM, BTN1, {repeat:true});
+        setWatch(toggleGPS, BTN3, {repeat:true});
+        setWatch(Bangle.showLauncher, BTN2, {repeat:false,edge:"falling"});
     }
     ctor();
 
