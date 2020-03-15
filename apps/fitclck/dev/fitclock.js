@@ -246,6 +246,11 @@
         var date = [fd[0], fd[1], fd[2]].join(" ");
         return time + " - " + date;
     }
+
+    Bangle.on('touch', (button)=>{
+        turnLcdOn();
+    });
+
     Bangle.on('lcdPower', function(on) {
         if (on) {
             showTime();
@@ -445,7 +450,7 @@
 
         setWatch(toggleHRM, BTN1, {repeat:true});
         setWatch(toggleGPS, BTN3, {repeat:true});
-        setWatch(turnLcdOn, BTN4, {repeat:false});
+
         setWatch(Bangle.showLauncher, BTN2, {repeat:false,edge:"falling"});
     }
     ctor();
