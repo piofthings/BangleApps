@@ -340,6 +340,12 @@
         Bangle.setGPSPower(gpsPower);
     }
 
+    function turnLcdOn(){
+        Bangle.setLCDTimeOut(5);
+        Bangle.setLCDPower(true);
+        Bangle.setLCDBrightness(0.3);
+    }
+
     function loadSettings(){
         let fitClockSettings = require("Storage").readJSON(FITCLOCKSETTINGS);
         if (fitClockSettings) {
@@ -439,6 +445,7 @@
 
         setWatch(toggleHRM, BTN1, {repeat:true});
         setWatch(toggleGPS, BTN3, {repeat:true});
+        setWatch(turnLcdOn, BTN4, {repeat:false});
         setWatch(Bangle.showLauncher, BTN2, {repeat:false,edge:"falling"});
     }
     ctor();
