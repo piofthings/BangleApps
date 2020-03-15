@@ -346,7 +346,7 @@
     }
 
     function turnLcdOn(){
-        Bangle.setLCDTimeOut(5);
+        Bangle.setLCDTimeout(5);
         Bangle.setLCDPower(true);
         Bangle.setLCDBrightness(0.3);
     }
