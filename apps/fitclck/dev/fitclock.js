@@ -348,7 +348,7 @@
         Bangle.setGPSPower(gpsPower);
     }
 
-    turnLcdOn : () => {
+    function turnLcdOn() {
         if (!Bangle.isLCDOn()){
             Bangle.setLCDPower(true);
         }
