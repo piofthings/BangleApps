@@ -1,6 +1,11 @@
 (function() {
     const FITCLOCKSETTINGS = "fitclock-settings.json";
-    var fln = "fitclock.log";
+    const MIN_LCD_POWER = 0.3;
+    const MAX_LCD_POWER = 1.0;
+    const LCD_POWER_INCREMENT = 0.1;
+    const LOG_FILE_NAME = "fitclock.log";
+
+    var currentLcdPower = 0.3;
     var hrmPower = 0;
     var gpsPower = 0;
     var fix = null;
@@ -254,9 +259,6 @@
     Bangle.on('lcdPower', function(on) {
         if (on) {
             showTime();
-            //Bangle.drawWidgets();
-            //var sentence = `"STEP","${formatTime(previousDate)}","${steps}"`;
-            //log(sentence);
         }
     });
 
@@ -307,7 +309,8 @@
           lastUpdate : previousDate.toISOString(),
           stepsToday : steps,
           logError: Bangle.AppLog.error,
-          logFull: Bangle.AppLog.diskFull
+          logFull: Bangle.AppLog.diskFull,
+          lcdPower: currentLcdPower
         };
         require("Storage").write(FITCLOCKSETTINGS,d);
     });
@@ -324,8 +327,8 @@
 
     function log(sentence){
         if(Bangle.AppLog.currentFile == null){
-            console.log("Trying to create new file:" + fln);
-            Bangle.AppLog.init(fln);
+            console.log("Trying to create new file:" + LOG_FILE_NAME);
+            Bangle.AppLog.init(LOG_FILE_NAME);
         }
         try{
             Bangle.AppLog.write(sentence + "\n");
@@ -345,10 +348,17 @@
         Bangle.setGPSPower(gpsPower);
     }
 
-    function turnLcdOn(){
-        Bangle.setLCDTimeout(5);
-        Bangle.setLCDPower(true);
-        Bangle.setLCDBrightness(0.3);
+    turnLcdOn : () => {
+        if (!Bangle.isLCDOn()){
+            Bangle.setLCDPower(true);
+        }
+        else{
+            currentLcdPower += LCD_POWER_INCREMENT;
+            if(currentLcdPower > MAX_LCD_POWER){
+                currentLcdPower = MIN_LCD_POWER;
+            }
+        }
+        Bangle.setLCDBrightness(currentLcdPower);
     }
 
     function loadSettings(){
@@ -357,6 +367,9 @@
             if (fitClockSettings.lastUpdate)
                 previousDate = new Date(fitClockSettings.lastUpdate);
             steps = fitClockSettings.stepsToday|0;
+            if(fitClockSettings.lcdPower){
+                currentLcdPower = fitClockSettings.lcdPower;
+            }
         }
     }
 
@@ -437,6 +450,7 @@
             }
         };
 
+        Bangle.setLCDTimeout(5);
         g.clear();
         loadSettings();
         setInterval(showTime, 1000);
