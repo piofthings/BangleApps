@@ -272,7 +272,7 @@
         }
         previousDate = currentDate;
         var acc = Bangle.getAccel();
-        var sentence = `A,"${(new Date()).toUTCString()}",${acc.x},${acc.y},${acc.z},${acc.diff},${acc.mag}`;
+        var sentence = `A,${(new Date()).toISOString()},${acc.x},${acc.y},${acc.z},${acc.diff},${acc.mag}`;
         log(sentence);
     });
 
@@ -281,7 +281,7 @@
         if(fix.satellites > 0 && fixMissedCount < fixMissedTimeout){
             fixMissedCount = 0;
             setTime(fix.time.getTime() / 1000);
-            var sentence = `G,"${(new Date()).toUTCString()}",${fix.satellites},${fix.lat},${fix.lon},${fix.alt},${fix.speed},${fix.course},${fix.time.ms}`;
+            var sentence = `G,${(new Date()).toISOString()},${fix.satellites},${fix.lat},${fix.lon},${fix.alt},${fix.speed},${fix.course},${fix.time.ms}`;
             log(sentence);
         }
         else{
@@ -300,7 +300,7 @@
 
     Bangle.on('HRM',function(hrm) {
        lhr = "BPM: " + hrm.bpm;
-       var sentence = `H,"${(new Date()).toUTCString()}",${hrm.bpm},${hrm.confidence}`;
+       var sentence = `H,${(new Date()).toISOString()},${hrm.bpm},${hrm.confidence}`;
        log(sentence);
     });
 
